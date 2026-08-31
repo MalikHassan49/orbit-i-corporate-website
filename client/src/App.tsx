@@ -1,0 +1,127 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { ThemeProvider } from '@/contexts/ThemeContext'
+import { PublicLayout } from '@/layouts/PublicLayout'
+import { ClientDashboardLayout } from '@/layouts/ClientDashboardLayout'
+import { AdminDashboardLayout } from '@/layouts/AdminDashboardLayout'
+import { RoleRoute, GuestOnlyRoute } from '@/routes/guards'
+import { ROUTES } from '@/constants'
+
+import { HomePage } from '@/pages/public/HomePage'
+import { AboutPage } from '@/pages/public/AboutPage'
+import { ServicesPage } from '@/pages/public/ServicesPage'
+import { ServiceDetailPage } from '@/pages/public/ServiceDetailPage'
+import { ProductsPage } from '@/pages/public/ProductsPage'
+import { ProductDetailPage } from '@/pages/public/ProductDetailPage'
+import { CaseStudiesPage, CaseStudyDetailPage } from '@/pages/public/CaseStudiesPages'
+import { TeamPage } from '@/pages/public/TeamPage'
+import { CareersPage, JobDetailPage } from '@/pages/public/CareersPages'
+import { ContactPage } from '@/pages/public/ContactPage'
+import { PrivacyPolicyPage } from '@/pages/public/PrivacyPolicyPage'
+import { RefundPolicyPage } from '@/pages/public/RefundPolicyPage'
+import { TermsPage } from '@/pages/public/TermsPage'
+import { NotFoundPage } from '@/pages/public/NotFoundPage'
+
+import { LoginPage } from '@/pages/public/auth/LoginPage'
+import { RegisterPage } from '@/pages/public/auth/RegisterPage'
+import { ForgotPasswordPage, ResetPasswordPage } from '@/pages/public/auth/ResetPasswordPages'
+
+import { ClientOverviewPage } from '@/pages/client/ClientOverviewPage'
+import { ClientOrdersPage } from '@/pages/client/ClientOrdersPage'
+import { ClientProjectsPage, ClientProjectDetailPage } from '@/pages/client/ClientProjectsPages'
+import { ClientProfilePage, ClientSettingsPage, ClientSupportPage, ClientInvoicesPage } from '@/pages/client/ClientMiscPages'
+
+import { AdminOverviewPage } from '@/pages/admin/AdminOverviewPage'
+import { AdminClientsPage } from '@/pages/admin/AdminClientsPage'
+import { AdminProductsPage } from '@/pages/admin/AdminProductsPage'
+import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage'
+import { AdminProjectsPage } from '@/pages/admin/AdminProjectsPage'
+import {
+  AdminCareersPage,
+  AdminApplicationsPage,
+  AdminLeadsPage,
+  AdminCaseStudiesPage,
+  AdminTestimonialsPage,
+  AdminTeamPage,
+  AdminSettingsPage,
+} from '@/pages/admin/AdminMiscPages'
+
+function App() {
+  return (
+    <ThemeProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+            {/* Public site */}
+            <Route element={<PublicLayout />}>
+              <Route path={ROUTES.home} element={<HomePage />} />
+              <Route path={ROUTES.about} element={<AboutPage />} />
+              <Route path={ROUTES.services} element={<ServicesPage />} />
+              <Route path="/services/:slug" element={<ServiceDetailPage />} />
+              <Route path={ROUTES.products} element={<ProductsPage />} />
+              <Route path="/products/:slug" element={<ProductDetailPage />} />
+              <Route path={ROUTES.caseStudies} element={<CaseStudiesPage />} />
+              <Route path="/case-studies/:slug" element={<CaseStudyDetailPage />} />
+              <Route path={ROUTES.team} element={<TeamPage />} />
+              <Route path={ROUTES.careers} element={<CareersPage />} />
+              <Route path="/careers/:id" element={<JobDetailPage />} />
+              <Route path={ROUTES.contact} element={<ContactPage />} />
+              <Route path={ROUTES.privacy} element={<PrivacyPolicyPage />} />
+              <Route path={ROUTES.refundPolicy} element={<RefundPolicyPage />} />
+              <Route path={ROUTES.terms} element={<TermsPage />} />
+
+              <Route path={ROUTES.login} element={<GuestOnlyRoute><LoginPage /></GuestOnlyRoute>} />
+              <Route path={ROUTES.register} element={<GuestOnlyRoute><RegisterPage /></GuestOnlyRoute>} />
+              <Route path={ROUTES.forgotPassword} element={<GuestOnlyRoute><ForgotPasswordPage /></GuestOnlyRoute>} />
+              <Route path={ROUTES.resetPassword} element={<GuestOnlyRoute><ResetPasswordPage /></GuestOnlyRoute>} />
+
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
+
+            {/* Client dashboard */}
+            <Route
+              element={
+                <RoleRoute roles={['client']}>
+                  <ClientDashboardLayout />
+                </RoleRoute>
+              }
+            >
+              <Route path={ROUTES.clientDashboard} element={<ClientOverviewPage />} />
+              <Route path={ROUTES.clientOrders} element={<ClientOrdersPage />} />
+              <Route path={ROUTES.clientProjects} element={<ClientProjectsPage />} />
+              <Route path="/client/projects/:id" element={<ClientProjectDetailPage />} />
+              <Route path={ROUTES.clientProfile} element={<ClientProfilePage />} />
+              <Route path={ROUTES.clientSettings} element={<ClientSettingsPage />} />
+              <Route path={ROUTES.clientSupport} element={<ClientSupportPage />} />
+              <Route path={ROUTES.clientInvoices} element={<ClientInvoicesPage />} />
+            </Route>
+
+            {/* Admin dashboard */}
+            <Route
+              element={
+                <RoleRoute roles={['admin', 'super_admin']}>
+                  <AdminDashboardLayout />
+                </RoleRoute>
+              }
+            >
+              <Route path={ROUTES.adminDashboard} element={<AdminOverviewPage />} />
+              <Route path={ROUTES.adminClients} element={<AdminClientsPage />} />
+              <Route path={ROUTES.adminProducts} element={<AdminProductsPage />} />
+              <Route path={ROUTES.adminOrders} element={<AdminOrdersPage />} />
+              <Route path={ROUTES.adminProjects} element={<AdminProjectsPage />} />
+              <Route path={ROUTES.adminCareers} element={<AdminCareersPage />} />
+              <Route path={ROUTES.adminApplications} element={<AdminApplicationsPage />} />
+              <Route path={ROUTES.adminLeads} element={<AdminLeadsPage />} />
+              <Route path={ROUTES.adminCaseStudies} element={<AdminCaseStudiesPage />} />
+              <Route path={ROUTES.adminTestimonials} element={<AdminTestimonialsPage />} />
+              <Route path={ROUTES.adminTeam} element={<AdminTeamPage />} />
+              <Route path={ROUTES.adminSettings} element={<AdminSettingsPage />} />
+            </Route>
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
+  )
+}
+
+export default App

@@ -1,0 +1,51 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: orbit-i-mongodb
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - orbit-i-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.server
+    container_name: orbit-i-server
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: mongodb://mongodb:27017/orbit-i
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-me-too-in-production}
+      JWT_ACCESS_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 30d
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:5173}
+    ports:
+      - '5000:5000'
+
+  client:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.client
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:5000/api/v1}
+    container_name: orbit-i-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - '5173:80'
+
+volumes:
+  orbit-i-mongo-data:

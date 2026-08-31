@@ -1,0 +1,100 @@
+/**
+ * ORBIT-I Design Tokens
+ * Derived from the ORBIT-I logo: a deep-space backdrop, a glowing blue
+ * orbital ring (light cyan -> deep navy blue gradient), a brushed-silver
+ * "i" letterform, and a thin elliptical orbit line carrying a small blue
+ * planet and a silver moon.
+ *
+ * These tokens are the single source of truth for color, type, spacing,
+ * radius and shadow across the whole app. Do not hardcode hex values in
+ * components — reference these variables (or the Tailwind theme, which
+ * maps directly onto them) instead.
+ */
+
+:root {
+  /* ---------- Color: Space / Surface ---------- */
+  --color-background: #05070d;
+  --color-background-elevated: #080b16;
+  --color-surface: #10152a;
+  --color-surface-hover: #161c38;
+  --color-border: #1e2740;
+  --color-border-strong: #2a3557;
+
+  /* ---------- Color: Brand (orbital ring blue) ---------- */
+  --color-primary-50: #eaf3ff;
+  --color-primary-100: #cfe4ff;
+  --color-primary-200: #9cc7ff;
+  --color-primary-300: #64a4ff;
+  --color-primary-400: #3f83ff;
+  --color-primary-500: #2e7fff; /* core brand blue */
+  --color-primary-600: #1f63e0;
+  --color-primary-700: #1b4fcc; /* deep ring blue */
+  --color-primary-800: #163f9e;
+  --color-primary-900: #122f75;
+
+  /* ---------- Color: Accent (ring highlight / orbit line glow) ---------- */
+  --color-accent-cyan: #5fd4ff;
+  --color-accent-cyan-soft: #a6e9ff;
+
+  /* ---------- Color: Secondary (the metallic "i") ---------- */
+  --color-silver-100: #f4f6fa;
+  --color-silver-300: #dde1ea;
+  --color-silver-500: #c9cdd6;
+  --color-silver-700: #9aa0ae;
+
+  /* ---------- Color: Text ---------- */
+  --color-text-primary: #f4f6fa;
+  --color-text-secondary: #8b93a7;
+  --color-text-muted: #5c6480;
+  --color-text-on-primary: #f4f6fa;
+
+  /* ---------- Color: Semantic ---------- */
+  --color-success: #34d399;
+  --color-warning: #f5b942;
+  --color-danger: #f2555a;
+  --color-info: var(--color-accent-cyan);
+
+  /* ---------- Gradients ---------- */
+  --gradient-brand: linear-gradient(135deg, var(--color-accent-cyan) 0%, var(--color-primary-500) 45%, var(--color-primary-700) 100%);
+  --gradient-surface: linear-gradient(180deg, #10152a 0%, #0a0e1c 100%);
+  --gradient-glow: radial-gradient(circle at 50% 0%, rgba(46, 127, 255, 0.25) 0%, rgba(46, 127, 255, 0) 60%);
+
+  /* ---------- Typography ---------- */
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* ---------- Radius ---------- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 999px;
+
+  /* ---------- Shadow / Glow ---------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
+  --glow-primary: 0 0 0 1px rgba(46, 127, 255, 0.4), 0 0 24px rgba(46, 127, 255, 0.25);
+  --glow-cyan: 0 0 24px rgba(95, 212, 255, 0.35);
+
+  /* ---------- Layout ---------- */
+  --container-max: 1280px;
+  --header-height: 76px;
+}
+
+/* Light mode override — used only where explicitly toggled (dashboards) */
+[data-theme='light'] {
+  --color-background: #f7f8fb;
+  --color-background-elevated: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f0f2f7;
+  --color-border: #e3e6ee;
+  --color-border-strong: #cfd4e2;
+
+  --color-text-primary: #0d1220;
+  --color-text-secondary: #565f78;
+  --color-text-muted: #8891a6;
+
+  --gradient-surface: linear-gradient(180deg, #ffffff 0%, #f4f6fb 100%);
+}
