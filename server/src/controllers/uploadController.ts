@@ -13,7 +13,10 @@ export const uploadController = {
         { resource_type: 'auto' },
         (error, result) => {
           if (error) {
-            reject(ApiError.internal(`Failed to upload image: ${error.message}`))
+            console.error('[Cloudinary Upload Error]', error)
+            reject(
+              ApiError.internal(`Failed to upload image: ${error.message}`)
+            )
           } else if (result) {
             resolve(sendSuccess(res, 201, 'Image uploaded', { url: result.secure_url }))
           }
