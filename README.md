@@ -83,10 +83,27 @@ Nginx (port 5173).
 | `JWT_SECRET` / `JWT_REFRESH_SECRET` | server | Signing secrets for access/refresh tokens — **must** be changed for production |
 | `JWT_ACCESS_EXPIRES_IN` / `JWT_REFRESH_EXPIRES_IN` | server | Token lifetimes |
 | `CLIENT_URL` | server | Allowed CORS origin + cookie scoping |
+| `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` | server | Cloudinary credentials for image storage — get these from your Cloudinary dashboard |
 | `VITE_API_BASE_URL` | client | Base URL the frontend calls for the API |
 | `VITE_SITE_URL` | client | Production domain used for canonical URLs, Open Graph tags, and structured data — set this before launch, and update `client/public/sitemap.xml` and `robots.txt` to match |
 
 Never commit `.env` files — only the `.env.example` templates are tracked.
+
+### Cloudinary setup
+
+Images are stored on Cloudinary (a persistent cloud service) rather than the local filesystem
+to ensure they survive deployments and server restarts.
+
+1. Sign up for a free Cloudinary account at https://cloudinary.com/
+2. Navigate to your Cloudinary dashboard (Settings > API Keys)
+3. Copy `Cloud Name`, `API Key`, and `API Secret`
+4. Add these to your `server/.env`:
+   ```
+   CLOUDINARY_CLOUD_NAME=your-cloud-name
+   CLOUDINARY_API_KEY=your-api-key
+   CLOUDINARY_API_SECRET=your-api-secret
+   ```
+5. Restart the backend — image uploads will now flow through Cloudinary
 
 ## Architecture notes
 
