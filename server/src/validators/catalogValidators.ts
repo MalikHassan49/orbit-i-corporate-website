@@ -39,6 +39,11 @@ export const contactMessageSchema = z.object({
   message: z.string().trim().min(10).max(5000),
 })
 
+export const createSupportTicketSchema = z.object({
+  subject: z.string().trim().min(3).max(160),
+  message: z.string().trim().min(10).max(5000),
+})
+
 export const jobApplicationSchema = z.object({
   jobId: z.string().min(1, 'Job is required'),
   name: z.string().trim().min(2).max(120),
