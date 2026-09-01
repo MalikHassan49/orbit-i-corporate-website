@@ -29,6 +29,11 @@ export const projectService = {
     return project
   },
 
+  async remove(id: string) {
+    const project = await Project.findByIdAndDelete(id)
+    if (!project) throw ApiError.notFound('Project not found')
+  },
+
   async addMilestone(id: string, milestone: { title: string; dueDate: Date }) {
     const project = await Project.findByIdAndUpdate(
       id,

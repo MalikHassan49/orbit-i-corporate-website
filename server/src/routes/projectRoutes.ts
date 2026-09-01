@@ -13,6 +13,7 @@ router.get('/mine/:id', authenticate, authorize(ROLES.CLIENT), projectController
 router.get('/', authenticate, authorize(...ADMIN_ROLES), projectController.listAll)
 router.post('/', authenticate, authorize(...ADMIN_ROLES), projectController.create)
 router.patch('/:id', authenticate, authorize(...ADMIN_ROLES), projectController.update)
+router.delete('/:id', authenticate, authorize(...ADMIN_ROLES), projectController.remove)
 router.post('/:id/milestones', authenticate, authorize(...ADMIN_ROLES), projectController.addMilestone)
 router.patch(
   '/:id/milestones/:milestoneId',

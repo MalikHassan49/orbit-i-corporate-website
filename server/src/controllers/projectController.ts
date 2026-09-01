@@ -36,6 +36,11 @@ export const projectController = {
     return sendSuccess(res, 200, 'Project updated', project)
   }),
 
+  remove: asyncHandler(async (req: Request, res: Response) => {
+    await projectService.remove((req.params.id as string))
+    return sendSuccess(res, 200, 'Project deleted', null)
+  }),
+
   addMilestone: asyncHandler(async (req: Request, res: Response) => {
     const project = await projectService.addMilestone((req.params.id as string), req.body)
     return sendSuccess(res, 201, 'Milestone added', project)

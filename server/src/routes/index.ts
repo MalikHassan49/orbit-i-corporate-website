@@ -6,6 +6,7 @@ import categoryRoutes from './categoryRoutes'
 import orderRoutes from './orderRoutes'
 import projectRoutes from './projectRoutes'
 import careersRoutes from './careersRoutes'
+import uploadRoutes from './uploadRoutes'
 import { serviceRoutes, caseStudyRoutes, testimonialRoutes, teamRoutes } from './contentRoutes'
 import { contactRoutes, adminRoutes } from './miscRoutes'
 
@@ -22,6 +23,7 @@ router.use('/case-studies', caseStudyRoutes)
 router.use('/testimonials', testimonialRoutes)
 router.use('/team', teamRoutes)
 router.use('/careers', careersRoutes)
+router.use('/uploads', uploadRoutes)
 router.use('/contact', contactRoutes)
 router.use('/admin', adminRoutes)
 

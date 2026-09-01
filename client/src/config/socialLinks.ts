@@ -1,10 +1,11 @@
-import { Camera, Link2, Mail, MessageCircle, Users } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
+import { Mail } from 'lucide-react'
+import { FaFacebook, FaInstagram, FaLinkedin, FaWhatsapp } from 'react-icons/fa6'
+import type { ElementType } from 'react'
 
 export interface SocialLink {
   name: string
   url: string
-  icon: LucideIcon
+  icon: ElementType
 }
 
 export const CONTACT_EMAIL = 'isamadrind.work@gmail.com'
@@ -18,13 +19,12 @@ export const INSTAGRAM_URL = 'https://www.instagram.com/Orbit_i?igsh=anpnbThjbnN
  * component (Footer, structured data, contact sections) reads from this
  * single array instead of hardcoding URLs.
  *
- * Note: a generic link icon is used for LinkedIn rather than the LinkedIn
- * brand mark, since this icon set doesn't ship brand/logo glyphs.
+ * Brand icons are used for social profiles; email retains a neutral mail icon.
  */
 export const socialLinks: SocialLink[] = [
-  { name: 'LinkedIn', url: LINKEDIN_URL, icon: Link2 },
+  { name: 'LinkedIn', url: LINKEDIN_URL, icon: FaLinkedin },
   { name: 'Email', url: `mailto:${CONTACT_EMAIL}`, icon: Mail },
-  { name: 'WhatsApp', url: WHATSAPP_CHANNEL_URL, icon: MessageCircle },
-  { name: 'Facebook', url: FACEBOOK_URL, icon: Users },
-  { name: 'Instagram', url: INSTAGRAM_URL, icon: Camera },
+  { name: 'WhatsApp', url: WHATSAPP_CHANNEL_URL, icon: FaWhatsapp },
+  { name: 'Facebook', url: FACEBOOK_URL, icon: FaFacebook },
+  { name: 'Instagram', url: INSTAGRAM_URL, icon: FaInstagram },
 ]

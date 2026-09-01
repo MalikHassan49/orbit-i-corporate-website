@@ -39,7 +39,7 @@ export const adminService = {
     const { data } = await apiClient.post<ApiResponse<Product>>('/products', payload)
     return data.data
   },
-  async updateProduct(id: string, payload: Partial<Product> & { category?: string }) {
+  async updateProduct(id: string, payload: Partial<Omit<Product, 'category'>> & { category?: string }) {
     const { data } = await apiClient.patch<ApiResponse<Product>>(`/products/${id}`, payload)
     return data.data
   },
@@ -56,10 +56,20 @@ export const adminService = {
     const { data } = await apiClient.patch<ApiResponse<CaseStudy>>(`/case-studies/${id}`, payload)
     return data.data
   },
+  async deleteCaseStudy(id: string) {
+    await apiClient.delete<ApiResponse<null>>(`/case-studies/${id}`)
+  },
 
   async createTestimonial(payload: Partial<Testimonial>) {
     const { data } = await apiClient.post<ApiResponse<Testimonial>>('/testimonials', payload)
     return data.data
+  },
+  async updateTestimonial(id: string, payload: Partial<Testimonial>) {
+    const { data } = await apiClient.patch<ApiResponse<Testimonial>>(`/testimonials/${id}`, payload)
+    return data.data
+  },
+  async deleteTestimonial(id: string) {
+    await apiClient.delete<ApiResponse<null>>(`/testimonials/${id}`)
   },
 
   async createService(payload: Partial<Service> & { slug: string }) {
@@ -79,6 +89,13 @@ export const adminService = {
     const { data } = await apiClient.post<ApiResponse<Project>>('/projects', payload)
     return data.data
   },
+  async updateProject(id: string, payload: Partial<Omit<Project, 'id' | 'clientId' | 'milestones'>>) {
+    const { data } = await apiClient.patch<ApiResponse<Project>>(`/projects/${id}`, payload)
+    return data.data
+  },
+  async deleteProject(id: string) {
+    await apiClient.delete<ApiResponse<null>>(`/projects/${id}`)
+  },
 
   async createJob(payload: {
     title: string
@@ -94,15 +111,27 @@ export const adminService = {
     const { data } = await apiClient.post<ApiResponse<Job>>('/careers/jobs', payload)
     return data.data
   },
+  async updateJob(id: string, payload: Partial<Job>) {
+    const { data } = await apiClient.patch<ApiResponse<Job>>(`/careers/jobs/${id}`, payload)
+    return data.data
+  },
 
   async createTeamMember(payload: {
     name: string
     designation: string
     bio: string
+    avatarUrl?: string
     linkedinUrl?: string
     skills?: string[]
   }) {
     const { data } = await apiClient.post<ApiResponse<TeamMember>>('/team', payload)
     return data.data
+  },
+  async updateTeamMember(id: string, payload: Partial<TeamMember>) {
+    const { data } = await apiClient.patch<ApiResponse<TeamMember>>(`/team/${id}`, payload)
+    return data.data
+  },
+  async deleteTeamMember(id: string) {
+    await apiClient.delete<ApiResponse<null>>(`/team/${id}`)
   },
 }

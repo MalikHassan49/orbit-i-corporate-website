@@ -33,6 +33,7 @@ export function AdminProductsPage() {
   const products = result?.items ?? []
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [form, setForm] = useState(emptyForm)
   const [formError, setFormError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -45,12 +46,29 @@ export function AdminProductsPage() {
   }
 
   const openModal = () => {
+    setEditingProduct(null)
     setForm({ ...emptyForm, category: categories?.[0]?.id ?? '' })
     setFormError(null)
     setIsModalOpen(true)
   }
 
-  const handleCreate = async () => {
+  const openEditModal = (product: Product) => {
+    setEditingProduct(product)
+    setForm({
+      name: product.name,
+      category: product.category?.id ?? '',
+      newCategoryName: '',
+      shortDescription: product.shortDescription,
+      description: product.description,
+      price: String(product.price),
+      features: product.features.join(', '),
+      status: product.status,
+    })
+    setFormError(null)
+    setIsModalOpen(true)
+  }
+
+  const handleSubmit = async () => {
     // Resolve category first — either the selected one, or a brand-new one
     // typed inline if none exist yet.
     let categoryId = form.category
@@ -88,20 +106,24 @@ export function AdminProductsPage() {
     setFormError(null)
     setIsSubmitting(true)
     try {
-      await adminService.createProduct({
+      const payload = {
         name: form.name,
-        slug: slugify(form.name),
         category: categoryId,
         shortDescription: form.shortDescription,
         description: form.description,
         price: Number(form.price),
         features: form.features.split(',').map((f) => f.trim()).filter(Boolean),
         status: form.status as Product['status'],
-      })
+      }
+      if (editingProduct) {
+        await adminService.updateProduct(editingProduct.id, payload)
+      } else {
+        await adminService.createProduct({ ...payload, slug: slugify(form.name) })
+      }
       setIsModalOpen(false)
       refetch()
     } catch (err) {
-      setFormError(getApiErrorMessage(err, 'Could not create the product.'))
+      setFormError(getApiErrorMessage(err, `Could not ${editingProduct ? 'update' : 'create'} the product.`))
     } finally {
       setIsSubmitting(false)
     }
@@ -116,6 +138,7 @@ export function AdminProductsPage() {
       header: '',
       render: (p) => (
         <div className="flex gap-2">
+          <Button size="sm" variant="ghost" onClick={() => openEditModal(p)}>Edit</Button>
           <Button size="sm" variant="ghost" onClick={() => handleArchive(p)} disabled={p.status === 'archived'}>
             Archive
           </Button>
@@ -143,7 +166,7 @@ export function AdminProductsPage() {
         <DataTable columns={columns} rows={products} keyField={(p) => p.id} />
       )}
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="New product">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingProduct ? 'Edit product' : 'New product'}>
         <div className="flex flex-col gap-4">
           <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Orbit CRM" />
 
@@ -212,8 +235,8 @@ export function AdminProductsPage() {
             </div>
           </div>
           {formError && <p className="text-sm text-[var(--color-danger)]">{formError}</p>}
-          <Button onClick={handleCreate} isLoading={isSubmitting} className="mt-2">
-            Create product
+          <Button onClick={handleSubmit} isLoading={isSubmitting} className="mt-2">
+            {editingProduct ? 'Save changes' : 'Create product'}
           </Button>
         </div>
       </Modal>
