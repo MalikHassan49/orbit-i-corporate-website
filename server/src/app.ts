@@ -4,7 +4,6 @@ import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
 import morgan from 'morgan'
-import { resolve } from 'node:path'
 import { env } from './config/env'
 import { apiRateLimiter } from './middleware/rateLimiter'
 import { notFoundHandler } from './middleware/validate'
@@ -26,12 +25,6 @@ app.use(cookieParser())
 app.use(express.json({ limit: '1mb' }))
 app.use(express.urlencoded({ extended: true, limit: '1mb' }))
 app.use(apiRateLimiter)
-app.use(
-  '/uploads',
-  express.static(resolve(process.cwd(), 'uploads'), {
-    setHeaders: (res) => res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'),
-  })
-)
 
 if (!env.isProduction) {
   app.use(morgan('dev'))

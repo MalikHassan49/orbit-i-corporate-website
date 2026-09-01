@@ -1,18 +1,9 @@
-import { mkdirSync } from 'node:fs'
-import { extname, resolve } from 'node:path'
-import { randomUUID } from 'node:crypto'
 import multer from 'multer'
 import { ApiError } from '../utils/ApiError'
 
-const uploadsDirectory = resolve(process.cwd(), 'uploads')
-mkdirSync(uploadsDirectory, { recursive: true })
-
 const allowedMimeTypes = new Set(['image/jpeg', 'image/png', 'image/webp'])
 
-const storage = multer.diskStorage({
-  destination: (_req, _file, callback) => callback(null, uploadsDirectory),
-  filename: (_req, file, callback) => callback(null, `${randomUUID()}${extname(file.originalname).toLowerCase()}`),
-})
+const storage = multer.memoryStorage()
 
 export const uploadImage = multer({
   storage,
@@ -25,3 +16,4 @@ export const uploadImage = multer({
     callback(null, true)
   },
 })
+

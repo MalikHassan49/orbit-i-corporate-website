@@ -19,5 +19,8 @@ export const env = {
   jwtAccessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN ?? '15m',
   jwtRefreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN ?? '30d',
   clientUrl: process.env.CLIENT_URL ?? 'http://localhost:5173',
+  cloudinaryCloudName: required('CLOUDINARY_CLOUD_NAME'),
+  cloudinaryApiKey: required('CLOUDINARY_API_KEY'),
+  cloudinaryApiSecret: required('CLOUDINARY_API_SECRET'),
   isProduction: process.env.NODE_ENV === 'production',
 }
