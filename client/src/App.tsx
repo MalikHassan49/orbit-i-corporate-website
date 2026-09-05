@@ -36,6 +36,7 @@ import { ClientProfilePage, ClientSettingsPage, ClientSupportPage, ClientInvoice
 
 import { AdminOverviewPage } from '@/pages/admin/AdminOverviewPage'
 import { AdminBlogPage } from '@/pages/admin/AdminBlogPage'
+import { AdminSupportPage } from '@/pages/admin/AdminSupportPage'
 import { AdminClientsPage } from '@/pages/admin/AdminClientsPage'
 import { AdminProductsPage } from '@/pages/admin/AdminProductsPage'
 import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage'
@@ -123,6 +124,7 @@ function App() {
               <Route path={ROUTES.adminCareers} element={<AdminCareersPage />} />
               <Route path={ROUTES.adminApplications} element={<AdminApplicationsPage />} />
               <Route path={ROUTES.adminLeads} element={<AdminLeadsPage />} />
+              <Route path={ROUTES.adminSupport} element={<AdminSupportPage />} />
               <Route path={ROUTES.adminTestimonials} element={<AdminTestimonialsPage />} />
               <Route path={ROUTES.adminTeam} element={<AdminTeamPage />} />
               <Route path={ROUTES.adminSettings} element={<AdminSettingsPage />} />
