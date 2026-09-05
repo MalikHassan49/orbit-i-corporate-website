@@ -4,7 +4,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext'
 import { PublicLayout } from '@/layouts/PublicLayout'
 import { ClientDashboardLayout } from '@/layouts/ClientDashboardLayout'
 import { AdminDashboardLayout } from '@/layouts/AdminDashboardLayout'
-import { RoleRoute, GuestOnlyRoute } from '@/routes/guards'
+import { RoleRoute, GuestOnlyRoute, ContentRoleRoute, SensitiveRoleRoute } from '@/routes/guards'
 import { ROUTES } from '@/constants'
 
 import { HomePage } from '@/pages/public/HomePage'
@@ -14,12 +14,15 @@ import { ServiceDetailPage } from '@/pages/public/ServiceDetailPage'
 import { ProductsPage } from '@/pages/public/ProductsPage'
 import { ProductDetailPage } from '@/pages/public/ProductDetailPage'
 import { CaseStudiesPage, CaseStudyDetailPage } from '@/pages/public/CaseStudiesPages'
+import { BlogPage, BlogPostPage } from '@/pages/public/BlogPages'
 import { TeamPage } from '@/pages/public/TeamPage'
 import { CareersPage, JobDetailPage } from '@/pages/public/CareersPages'
 import { ContactPage } from '@/pages/public/ContactPage'
 import { PrivacyPolicyPage } from '@/pages/public/PrivacyPolicyPage'
 import { RefundPolicyPage } from '@/pages/public/RefundPolicyPage'
 import { TermsPage } from '@/pages/public/TermsPage'
+import { SecurityPolicyPage } from '@/pages/public/SecurityPolicyPage'
+import { WebsiteDisclaimerPage } from '@/pages/public/WebsiteDisclaimerPage'
 import { NotFoundPage } from '@/pages/public/NotFoundPage'
 
 import { LoginPage } from '@/pages/public/auth/LoginPage'
@@ -32,6 +35,7 @@ import { ClientProjectsPage, ClientProjectDetailPage } from '@/pages/client/Clie
 import { ClientProfilePage, ClientSettingsPage, ClientSupportPage, ClientInvoicesPage } from '@/pages/client/ClientMiscPages'
 
 import { AdminOverviewPage } from '@/pages/admin/AdminOverviewPage'
+import { AdminBlogPage } from '@/pages/admin/AdminBlogPage'
 import { AdminClientsPage } from '@/pages/admin/AdminClientsPage'
 import { AdminProductsPage } from '@/pages/admin/AdminProductsPage'
 import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage'
@@ -62,6 +66,8 @@ function App() {
               <Route path="/products/:slug" element={<ProductDetailPage />} />
               <Route path={ROUTES.caseStudies} element={<CaseStudiesPage />} />
               <Route path="/case-studies/:slug" element={<CaseStudyDetailPage />} />
+              <Route path={ROUTES.blog} element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPostPage />} />
               <Route path={ROUTES.team} element={<TeamPage />} />
               <Route path={ROUTES.careers} element={<CareersPage />} />
               <Route path="/careers/:id" element={<JobDetailPage />} />
@@ -69,6 +75,8 @@ function App() {
               <Route path={ROUTES.privacy} element={<PrivacyPolicyPage />} />
               <Route path={ROUTES.refundPolicy} element={<RefundPolicyPage />} />
               <Route path={ROUTES.terms} element={<TermsPage />} />
+              <Route path={ROUTES.securityPolicy} element={<SecurityPolicyPage />} />
+              <Route path={ROUTES.disclaimer} element={<WebsiteDisclaimerPage />} />
 
               <Route path={ROUTES.login} element={<GuestOnlyRoute><LoginPage /></GuestOnlyRoute>} />
               <Route path={ROUTES.register} element={<GuestOnlyRoute><RegisterPage /></GuestOnlyRoute>} />
@@ -96,12 +104,12 @@ function App() {
               <Route path={ROUTES.clientInvoices} element={<ClientInvoicesPage />} />
             </Route>
 
-            {/* Admin dashboard */}
+            {/* Sensitive admin dashboard — editors must not access operational data. */}
             <Route
               element={
-                <RoleRoute roles={['admin', 'super_admin']}>
+                <SensitiveRoleRoute>
                   <AdminDashboardLayout />
-                </RoleRoute>
+                </SensitiveRoleRoute>
               }
             >
               <Route path={ROUTES.adminDashboard} element={<AdminOverviewPage />} />
@@ -112,10 +120,21 @@ function App() {
               <Route path={ROUTES.adminCareers} element={<AdminCareersPage />} />
               <Route path={ROUTES.adminApplications} element={<AdminApplicationsPage />} />
               <Route path={ROUTES.adminLeads} element={<AdminLeadsPage />} />
-              <Route path={ROUTES.adminCaseStudies} element={<AdminCaseStudiesPage />} />
               <Route path={ROUTES.adminTestimonials} element={<AdminTestimonialsPage />} />
               <Route path={ROUTES.adminTeam} element={<AdminTeamPage />} />
               <Route path={ROUTES.adminSettings} element={<AdminSettingsPage />} />
+            </Route>
+
+            {/* Content administration — editors can only manage published content. */}
+            <Route
+              element={
+                <ContentRoleRoute>
+                  <AdminDashboardLayout />
+                </ContentRoleRoute>
+              }
+            >
+              <Route path={ROUTES.adminCaseStudies} element={<AdminCaseStudiesPage />} />
+              <Route path={ROUTES.adminBlog} element={<AdminBlogPage />} />
             </Route>
           </Routes>
         </AuthProvider>

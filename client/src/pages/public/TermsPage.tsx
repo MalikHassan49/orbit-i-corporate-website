@@ -19,8 +19,8 @@ export function TermsPage() {
         <h2>Website Usage</h2>
         <p>You agree to use this website only for lawful purposes and in a way that does not infringe the rights of, or restrict or inhibit the use of, this site by any third party.</p>
 
-        <h2>Services</h2>
-        <p>ORBIT-I provides software development, consulting, and related digital products and services as described on this website.</p>
+        <h2>Services and project agreements</h2>
+        <p>ORBIT-I provides software development, consulting, and related digital products and services as described on this website. A signed proposal, order, statement of work, or project agreement may include scope, milestones, acceptance criteria, fees, ownership, and support terms; that agreement controls if it conflicts with this page.</p>
 
         <h2>Accounts</h2>
         <p>
@@ -36,7 +36,7 @@ export function TermsPage() {
         <p>All content on this website, including the ORBIT-I name, logo, and branding, is the property of ORBIT-I Private Limited unless otherwise stated.</p>
 
         <h2>Payments</h2>
-        <p>Fees for products and services are as described at the time of purchase or in the applicable order/agreement.</p>
+        <p>Fees for products and services are as described at the time of purchase or in the applicable order/agreement. You are responsible for accurate billing details, applicable taxes, and fees charged by your bank or payment provider.</p>
 
         <h2>Orders</h2>
         <p>
@@ -60,7 +60,7 @@ export function TermsPage() {
         <p>These terms may be updated from time to time. Continued use of the site after changes constitutes acceptance of the updated terms.</p>
 
         <h2>Governing Law</h2>
-        <p>These terms are governed by the laws of [governing jurisdiction to be specified], without regard to conflict-of-law principles.</p>
+        <p>These terms are governed by the laws of the Islamic Republic of Pakistan. Subject to any mandatory consumer protection rights, the courts of Pakistan having jurisdiction over ORBIT-I Private Limited's registered office will have exclusive jurisdiction over disputes.</p>
 
         <h2>Contact Information</h2>
         <p>

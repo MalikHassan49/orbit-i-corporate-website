@@ -54,3 +54,28 @@ export const jobApplicationSchema = z.object({
   linkedin: z.string().trim().optional(),
   portfolio: z.string().trim().optional(),
 })
+
+export const createCategorySchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  slug: z.string().trim().toLowerCase().regex(/^[a-z0-9-]+$/).optional(),
+})
+
+export const updateCategorySchema = createCategorySchema.partial()
+export const createTagSchema = createCategorySchema
+export const updateTagSchema = updateCategorySchema
+
+export const createBlogPostSchema = z.object({
+  title: z.string().trim().min(3).max(180),
+  slug: z.string().trim().toLowerCase().regex(/^[a-z0-9-]+$/).optional(),
+  excerpt: z.string().trim().min(10).max(320),
+  content: z.string().min(1).max(500000),
+  coverImage: z.string().url().optional(),
+  category: z.string().min(1),
+  tags: z.array(z.string().min(1)).default([]),
+  status: z.enum(['draft', 'published']).default('draft'),
+  publishedAt: z.coerce.date().optional(),
+  seoTitle: z.string().trim().max(180).optional(),
+  seoDescription: z.string().trim().max(320).optional(),
+})
+
+export const updateBlogPostSchema = createBlogPostSchema.partial()

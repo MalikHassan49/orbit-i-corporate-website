@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { GlobalStructuredData } from '@/components/seo/GlobalStructuredData'
+import { AdSense } from '@/components/ads/AdSense'
 
 export function PublicLayout() {
   return (
@@ -9,6 +10,7 @@ export function PublicLayout() {
       <GlobalStructuredData />
       <Navbar />
       <main className="flex-1">
+        <AdSense />
         <Outlet />
       </main>
       <Footer />
