@@ -40,9 +40,12 @@ export function AdminSupportPage() {
     { header: 'Subject', render: (ticket) => <span className="font-medium">{ticket.subject}</span> },
     {
       header: 'Client',
+<<<<<<< HEAD
+=======
       render: (ticket) => <div><p>{ticket.user.fullName}</p><p className="text-xs text-[var(--color-text-secondary)]">{ticket.user.email}</p></div>,
     },
     { header: 'Status', render: (ticket) => <Badge tone={statusTone[ticket.status]}>{ticket.status.replace('_', ' ')}</Badge> },
+>>>>>>> 20a737c5e7098ff777dfd1854ddfda48a3525328
       render: (ticket) => (
         <div>
           <p>{ticket.user.fullName}</p>
@@ -58,6 +61,8 @@ export function AdminSupportPage() {
     {
       header: '',
       render: (ticket) => (
+<<<<<<< HEAD
+=======
         <select
           value={ticket.status}
           disabled={updatingId === ticket.id}
@@ -67,6 +72,7 @@ export function AdminSupportPage() {
         >
           {statuses.map((status) => <option key={status} value={status}>{status.replace('_', ' ')}</option>)}
         </select>
+>>>>>>> 20a737c5e7098ff777dfd1854ddfda48a3525328
         <div className="flex items-center gap-2">
           <select
             value={ticket.status}
@@ -92,8 +98,11 @@ export function AdminSupportPage() {
         <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Review and manage client support tickets.</p>
       </div>
       {updateError && <p className="text-sm text-[var(--color-danger)]">{updateError}</p>}
+<<<<<<< HEAD
+=======
       {isLoading ? <PageLoader /> : error ? <ErrorState onRetry={refetch} /> : (
         <DataTable columns={columns} rows={tickets ?? []} keyField={(ticket) => ticket.id} emptyTitle="No support tickets" />
+>>>>>>> 20a737c5e7098ff777dfd1854ddfda48a3525328
       {isLoading ? (
         <PageLoader />
       ) : error ? (

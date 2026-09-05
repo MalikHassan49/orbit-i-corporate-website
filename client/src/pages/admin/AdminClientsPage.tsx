@@ -17,7 +17,6 @@ export function AdminClientsPage() {
   const { user } = useAuth()
   const [query, setQuery] = useState('')
   const [isInviteOpen, setIsInviteOpen] = useState(false)
-  const [accountRole, setAccountRole] = useState<'editor' | 'seo_manager'>('editor')
   const [accountForm, setAccountForm] = useState({ fullName: '', email: '', password: '' })
   const [accountError, setAccountError] = useState<string | null>(null)
   const [isCreatingAccount, setIsCreatingAccount] = useState(false)
@@ -32,8 +31,7 @@ export function AdminClientsPage() {
     refetch()
   }
 
-  const openCreateDialog = (role: 'editor' | 'seo_manager') => {
-    setAccountRole(role)
+  const openCreateDialog = () => {
     setAccountForm({ fullName: '', email: '', password: '' })
     setAccountError(null)
     setIsInviteOpen(true)
@@ -43,25 +41,20 @@ export function AdminClientsPage() {
     const fullName = accountForm.fullName.trim()
     const email = accountForm.email.trim()
     const password = accountForm.password.trim()
-    const roleLabel = accountRole === 'seo_manager' ? 'SEO manager' : 'editor'
 
     if (!fullName || !email || !password) {
-      setAccountError(`Please provide a name, email, and password for the ${roleLabel} account.`)
+      setAccountError('Please provide a name, email, and password for the SEO manager account.')
       return
     }
 
     setAccountError(null)
     setIsCreatingAccount(true)
     try {
-      if (accountRole === 'seo_manager') {
-        await adminService.createSeoManager({ fullName, email, password })
-      } else {
-        await adminService.createEditor({ fullName, email, password })
-      }
+      await adminService.createSeoManager({ fullName, email, password })
       setIsInviteOpen(false)
       setAccountForm({ fullName: '', email: '', password: '' })
     } catch (err) {
-      setAccountError(getApiErrorMessage(err, `Could not create the ${roleLabel} account.`))
+      setAccountError(getApiErrorMessage(err, 'Could not create the SEO manager account.'))
     } finally {
       setIsCreatingAccount(false)
     }
@@ -93,14 +86,9 @@ export function AdminClientsPage() {
         </div>
         <div className="flex w-full flex-col gap-3 sm:max-w-xl sm:flex-row sm:items-center sm:justify-end">
           {user?.role === 'super_admin' && (
-            <>
-              <Button size="md" variant="outline" onClick={() => openCreateDialog('editor')}>
-                Create editor
-              </Button>
-              <Button size="md" variant="outline" onClick={() => openCreateDialog('seo_manager')}>
-                Create SEO manager
-              </Button>
-            </>
+            <Button size="md" variant="outline" onClick={openCreateDialog}>
+              Create SEO manager
+            </Button>
           )}
           <div className="relative w-full sm:max-w-xs">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[var(--color-text-muted)]" aria-hidden />
@@ -116,10 +104,10 @@ export function AdminClientsPage() {
         <DataTable columns={columns} rows={clients} keyField={(c) => c.id} emptyTitle="No clients found" />
       )}
 
-      <Modal isOpen={isInviteOpen} onClose={() => setIsInviteOpen(false)} title={accountRole === 'seo_manager' ? 'Create SEO manager account' : 'Create editor account'}>
+      <Modal isOpen={isInviteOpen} onClose={() => setIsInviteOpen(false)} title="Create SEO manager account">
         <div className="flex flex-col gap-4">
-          <Input label="Full name" value={accountForm.fullName} onChange={(e) => setAccountForm({ ...accountForm, fullName: e.target.value })} placeholder={accountRole === 'seo_manager' ? 'Jane SEO' : 'Jane Editor'} />
-          <Input label="Email" type="email" value={accountForm.email} onChange={(e) => setAccountForm({ ...accountForm, email: e.target.value })} placeholder={accountRole === 'seo_manager' ? 'seo@orbit-i.com' : 'editor@orbit-i.com'} />
+          <Input label="Full name" value={accountForm.fullName} onChange={(e) => setAccountForm({ ...accountForm, fullName: e.target.value })} placeholder="Jane SEO" />
+          <Input label="Email" type="email" value={accountForm.email} onChange={(e) => setAccountForm({ ...accountForm, email: e.target.value })} placeholder="seo@orbit-i.com" />
           <Input label="Temporary password" type="password" value={accountForm.password} onChange={(e) => setAccountForm({ ...accountForm, password: e.target.value })} placeholder="••••••••" />
           {accountError && <p className="text-sm text-[var(--color-danger)]">{accountError}</p>}
           <Button onClick={handleCreateAccount} isLoading={isCreatingAccount}>Create account</Button>
