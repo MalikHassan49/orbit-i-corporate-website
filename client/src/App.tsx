@@ -50,6 +50,7 @@ import {
   AdminTestimonialsPage,
   AdminTeamPage,
   AdminSettingsPage,
+  AdminSeoDashboardPage,
 } from '@/pages/admin/AdminMiscPages'
 
 function App() {
@@ -127,7 +128,7 @@ function App() {
               <Route path={ROUTES.adminSettings} element={<AdminSettingsPage />} />
             </Route>
 
-            {/* Content administration — editors can only manage published content. */}
+            {/* Content administration — editors and SEO managers can manage content workflows without sensitive admin access. */}
             <Route
               element={
                 <ContentRoleRoute>
@@ -135,6 +136,7 @@ function App() {
                 </ContentRoleRoute>
               }
             >
+              <Route path={ROUTES.adminSeoDashboard} element={<AdminSeoDashboardPage />} />
               <Route path={ROUTES.adminCaseStudies} element={<AdminCaseStudiesPage />} />
               <Route path={ROUTES.adminBlog} element={<AdminBlogPage />} />
               <Route path={ROUTES.adminCategories} element={<AdminCategoriesPage />} />

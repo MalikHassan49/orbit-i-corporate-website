@@ -11,7 +11,7 @@ import { formatDate } from '@/utils/formatters'
 import { slugify } from '@/utils/formatters'
 import { careersService, type JobApplicationRecord } from '@/services/careersService'
 import { contactService, type ContactMessageRecord } from '@/services/contactService'
-import { caseStudyService, testimonialService, taxonomyService } from '@/services/contentService'
+import { blogService, caseStudyService, testimonialService, taxonomyService } from '@/services/contentService'
 import { teamService } from '@/services/teamService'
 import { adminService } from '@/services/adminService'
 import { useFetch } from '@/hooks/useFetch'
@@ -567,6 +567,58 @@ export function AdminTeamPage() {
           </Button>
         </div>
       </Modal>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// SEO dashboard and content management
+// ---------------------------------------------------------------------------
+export function AdminSeoDashboardPage() {
+  const { data: posts, isLoading, error, refetch } = useFetch(() => blogService.listAll(), [])
+  const { data: caseStudies } = useFetch(() => caseStudyService.listAll(), [])
+  const { data: categories } = useFetch(() => taxonomyService.categories(), [])
+  const { data: tags } = useFetch(() => taxonomyService.tags(), [])
+  const blogCount = Array.isArray(posts) ? posts.length : 0
+  const caseStudyCount = Array.isArray(caseStudies) ? caseStudies.length : 0
+  const categoryCount = Array.isArray(categories) ? categories.length : 0
+  const tagCount = Array.isArray(tags) ? tags.length : 0
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <h2 className="font-display text-xl font-semibold text-[var(--color-text-primary)]">SEO dashboard</h2>
+        <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Content visibility, metadata, and publishing shortcuts for SEO-friendly growth.</p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card hoverable={false}>
+          <p className="text-sm text-[var(--color-text-secondary)]">Blog posts</p>
+          <p className="mt-2 text-3xl font-semibold text-[var(--color-text-primary)]">{isLoading ? '…' : blogCount}</p>
+        </Card>
+        <Card hoverable={false}>
+          <p className="text-sm text-[var(--color-text-secondary)]">Case studies</p>
+          <p className="mt-2 text-3xl font-semibold text-[var(--color-text-primary)]">{caseStudyCount}</p>
+        </Card>
+        <Card hoverable={false}>
+          <p className="text-sm text-[var(--color-text-secondary)]">Taxonomy</p>
+          <p className="mt-2 text-3xl font-semibold text-[var(--color-text-primary)]">{categoryCount + tagCount}</p>
+        </Card>
+      </div>
+
+      {error ? <ErrorState onRetry={refetch} /> : (
+        <Card hoverable={false}>
+          <div className="flex flex-col gap-3">
+            <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Quick SEO actions</h3>
+            <ul className="space-y-2 text-sm text-[var(--color-text-secondary)]">
+              <li>• Review and publish new blog content.</li>
+              <li>• Update case study metadata and summary copy.</li>
+              <li>• Manage categories and tags for discoverability.</li>
+              <li>• Maintain search-friendly titles and descriptions for content pages.</li>
+            </ul>
+          </div>
+        </Card>
+      )}
     </div>
   )
 }

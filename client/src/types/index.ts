@@ -4,7 +4,7 @@
 // grows, consider generating these from the API's OpenAPI/Zod schemas.
 // ---------------------------------------------------------------------------
 
-export type UserRole = 'client' | 'editor' | 'admin' | 'super_admin'
+export type UserRole = 'client' | 'editor' | 'seo_manager' | 'admin' | 'super_admin'
 
 export interface User {
   id: string

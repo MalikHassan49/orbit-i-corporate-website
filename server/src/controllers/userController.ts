@@ -33,4 +33,6 @@ export const userController = {
   }),
   createEditor: asyncHandler(async (req: Request, res: Response) =>
     sendSuccess(res, 201, 'Editor account created', await userService.createEditor(req.body))),
+  createSeoManager: asyncHandler(async (req: Request, res: Response) =>
+    sendSuccess(res, 201, 'SEO Manager account created', await userService.createSeoManager(req.body))),
 }

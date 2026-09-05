@@ -54,4 +54,15 @@ export const userService = {
       isVerified: true,
     })
   },
+
+  async createSeoManager(input: { fullName: string; email: string; password: string }) {
+    if (await User.findOne({ email: input.email })) throw ApiError.conflict('An account with this email already exists')
+    return User.create({
+      fullName: input.fullName,
+      email: input.email,
+      passwordHash: await bcrypt.hash(input.password, 12),
+      role: ROLES.SEO_MANAGER,
+      isVerified: true,
+    })
+  },
 }

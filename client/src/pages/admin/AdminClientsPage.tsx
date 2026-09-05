@@ -17,9 +17,10 @@ export function AdminClientsPage() {
   const { user } = useAuth()
   const [query, setQuery] = useState('')
   const [isInviteOpen, setIsInviteOpen] = useState(false)
-  const [editorForm, setEditorForm] = useState({ fullName: '', email: '', password: '' })
-  const [editorError, setEditorError] = useState<string | null>(null)
-  const [isCreatingEditor, setIsCreatingEditor] = useState(false)
+  const [accountRole, setAccountRole] = useState<'editor' | 'seo_manager'>('editor')
+  const [accountForm, setAccountForm] = useState({ fullName: '', email: '', password: '' })
+  const [accountError, setAccountError] = useState<string | null>(null)
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false)
   const { data: result, isLoading, error, refetch } = useFetch(
     () => adminService.listClients({ search: query || undefined }),
     [query]
@@ -31,26 +32,38 @@ export function AdminClientsPage() {
     refetch()
   }
 
-  const handleCreateEditor = async () => {
-    const fullName = editorForm.fullName.trim()
-    const email = editorForm.email.trim()
-    const password = editorForm.password.trim()
+  const openCreateDialog = (role: 'editor' | 'seo_manager') => {
+    setAccountRole(role)
+    setAccountForm({ fullName: '', email: '', password: '' })
+    setAccountError(null)
+    setIsInviteOpen(true)
+  }
+
+  const handleCreateAccount = async () => {
+    const fullName = accountForm.fullName.trim()
+    const email = accountForm.email.trim()
+    const password = accountForm.password.trim()
+    const roleLabel = accountRole === 'seo_manager' ? 'SEO manager' : 'editor'
 
     if (!fullName || !email || !password) {
-      setEditorError('Please provide a name, email, and password for the editor account.')
+      setAccountError(`Please provide a name, email, and password for the ${roleLabel} account.`)
       return
     }
 
-    setEditorError(null)
-    setIsCreatingEditor(true)
+    setAccountError(null)
+    setIsCreatingAccount(true)
     try {
-      await adminService.createEditor({ fullName, email, password })
+      if (accountRole === 'seo_manager') {
+        await adminService.createSeoManager({ fullName, email, password })
+      } else {
+        await adminService.createEditor({ fullName, email, password })
+      }
       setIsInviteOpen(false)
-      setEditorForm({ fullName: '', email: '', password: '' })
+      setAccountForm({ fullName: '', email: '', password: '' })
     } catch (err) {
-      setEditorError(getApiErrorMessage(err, 'Could not create the editor account.'))
+      setAccountError(getApiErrorMessage(err, `Could not create the ${roleLabel} account.`))
     } finally {
-      setIsCreatingEditor(false)
+      setIsCreatingAccount(false)
     }
   }
 
@@ -80,9 +93,14 @@ export function AdminClientsPage() {
         </div>
         <div className="flex w-full flex-col gap-3 sm:max-w-xl sm:flex-row sm:items-center sm:justify-end">
           {user?.role === 'super_admin' && (
-            <Button size="md" variant="outline" onClick={() => setIsInviteOpen(true)}>
-              Create editor
-            </Button>
+            <>
+              <Button size="md" variant="outline" onClick={() => openCreateDialog('editor')}>
+                Create editor
+              </Button>
+              <Button size="md" variant="outline" onClick={() => openCreateDialog('seo_manager')}>
+                Create SEO manager
+              </Button>
+            </>
           )}
           <div className="relative w-full sm:max-w-xs">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[var(--color-text-muted)]" aria-hidden />
@@ -98,13 +116,13 @@ export function AdminClientsPage() {
         <DataTable columns={columns} rows={clients} keyField={(c) => c.id} emptyTitle="No clients found" />
       )}
 
-      <Modal isOpen={isInviteOpen} onClose={() => setIsInviteOpen(false)} title="Create editor account">
+      <Modal isOpen={isInviteOpen} onClose={() => setIsInviteOpen(false)} title={accountRole === 'seo_manager' ? 'Create SEO manager account' : 'Create editor account'}>
         <div className="flex flex-col gap-4">
-          <Input label="Full name" value={editorForm.fullName} onChange={(e) => setEditorForm({ ...editorForm, fullName: e.target.value })} placeholder="Jane Editor" />
-          <Input label="Email" type="email" value={editorForm.email} onChange={(e) => setEditorForm({ ...editorForm, email: e.target.value })} placeholder="editor@orbit-i.com" />
-          <Input label="Temporary password" type="password" value={editorForm.password} onChange={(e) => setEditorForm({ ...editorForm, password: e.target.value })} placeholder="••••••••" />
-          {editorError && <p className="text-sm text-[var(--color-danger)]">{editorError}</p>}
-          <Button onClick={handleCreateEditor} isLoading={isCreatingEditor}>Create account</Button>
+          <Input label="Full name" value={accountForm.fullName} onChange={(e) => setAccountForm({ ...accountForm, fullName: e.target.value })} placeholder={accountRole === 'seo_manager' ? 'Jane SEO' : 'Jane Editor'} />
+          <Input label="Email" type="email" value={accountForm.email} onChange={(e) => setAccountForm({ ...accountForm, email: e.target.value })} placeholder={accountRole === 'seo_manager' ? 'seo@orbit-i.com' : 'editor@orbit-i.com'} />
+          <Input label="Temporary password" type="password" value={accountForm.password} onChange={(e) => setAccountForm({ ...accountForm, password: e.target.value })} placeholder="••••••••" />
+          {accountError && <p className="text-sm text-[var(--color-danger)]">{accountError}</p>}
+          <Button onClick={handleCreateAccount} isLoading={isCreatingAccount}>Create account</Button>
         </div>
       </Modal>
     </div>

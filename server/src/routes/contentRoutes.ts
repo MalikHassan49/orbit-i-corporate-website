@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { serviceController, caseStudyController, testimonialController, teamController, blogPostController } from '../controllers/contentController'
 import { authenticate, authorize } from '../middleware/auth'
-import { CONTENT_EDITOR_ROLES } from '../constants/roles'
+import { CONTENT_EDITOR_ROLES, SEO_CONTENT_ROLES } from '../constants/roles'
 import { validateBody } from '../middleware/validate'
 import { createBlogPostSchema, updateBlogPostSchema } from '../validators/catalogValidators'
 
@@ -14,11 +14,11 @@ serviceRoutes.delete('/:id', authenticate, authorize(...CONTENT_EDITOR_ROLES), s
 
 export const caseStudyRoutes = Router()
 caseStudyRoutes.get('/', caseStudyController.list)
-caseStudyRoutes.get('/admin/all', authenticate, authorize(...CONTENT_EDITOR_ROLES), caseStudyController.listAll)
+caseStudyRoutes.get('/admin/all', authenticate, authorize(...SEO_CONTENT_ROLES), caseStudyController.listAll)
 caseStudyRoutes.get('/:slug', caseStudyController.getBySlug)
-caseStudyRoutes.post('/', authenticate, authorize(...CONTENT_EDITOR_ROLES), caseStudyController.create)
-caseStudyRoutes.patch('/:id', authenticate, authorize(...CONTENT_EDITOR_ROLES), caseStudyController.update)
-caseStudyRoutes.delete('/:id', authenticate, authorize(...CONTENT_EDITOR_ROLES), caseStudyController.remove)
+caseStudyRoutes.post('/', authenticate, authorize(...SEO_CONTENT_ROLES), caseStudyController.create)
+caseStudyRoutes.patch('/:id', authenticate, authorize(...SEO_CONTENT_ROLES), caseStudyController.update)
+caseStudyRoutes.delete('/:id', authenticate, authorize(...SEO_CONTENT_ROLES), caseStudyController.remove)
 
 export const testimonialRoutes = Router()
 testimonialRoutes.get('/', testimonialController.list)
@@ -36,13 +36,13 @@ teamRoutes.delete('/:id', authenticate, authorize(...CONTENT_EDITOR_ROLES), team
 
 export const blogPostRoutes = Router()
 blogPostRoutes.get('/', blogPostController.list)
-blogPostRoutes.get('/admin/all', authenticate, authorize(...CONTENT_EDITOR_ROLES), (req, res, next) => {
+blogPostRoutes.get('/admin/all', authenticate, authorize(...SEO_CONTENT_ROLES), (req, res, next) => {
   req.query.includeDrafts = 'true'
   return blogPostController.list(req, res, next)
 })
 blogPostRoutes.get('/:slug', blogPostController.getBySlug)
-blogPostRoutes.post('/', authenticate, authorize(...CONTENT_EDITOR_ROLES), validateBody(createBlogPostSchema), blogPostController.create)
-blogPostRoutes.patch('/:id', authenticate, authorize(...CONTENT_EDITOR_ROLES), validateBody(updateBlogPostSchema), blogPostController.update)
-blogPostRoutes.delete('/:id', authenticate, authorize(...CONTENT_EDITOR_ROLES), blogPostController.remove)
-blogPostRoutes.patch('/:id/publish', authenticate, authorize(...CONTENT_EDITOR_ROLES), blogPostController.publish)
-blogPostRoutes.patch('/:id/unpublish', authenticate, authorize(...CONTENT_EDITOR_ROLES), blogPostController.unpublish)
+blogPostRoutes.post('/', authenticate, authorize(...SEO_CONTENT_ROLES), validateBody(createBlogPostSchema), blogPostController.create)
+blogPostRoutes.patch('/:id', authenticate, authorize(...SEO_CONTENT_ROLES), validateBody(updateBlogPostSchema), blogPostController.update)
+blogPostRoutes.delete('/:id', authenticate, authorize(...SEO_CONTENT_ROLES), blogPostController.remove)
+blogPostRoutes.patch('/:id/publish', authenticate, authorize(...SEO_CONTENT_ROLES), blogPostController.publish)
+blogPostRoutes.patch('/:id/unpublish', authenticate, authorize(...SEO_CONTENT_ROLES), blogPostController.unpublish)

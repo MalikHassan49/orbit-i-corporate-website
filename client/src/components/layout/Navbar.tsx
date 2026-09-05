@@ -31,7 +31,11 @@ export function Navbar() {
   }, [])
 
   const dashboardRoute =
-    user?.role === 'admin' || user?.role === 'super_admin' ? ROUTES.adminDashboard : ROUTES.clientDashboard
+    user?.role === 'admin' || user?.role === 'super_admin'
+      ? ROUTES.adminDashboard
+      : user?.role === 'seo_manager'
+        ? ROUTES.adminSeoDashboard
+        : ROUTES.clientDashboard
 
   return (
     <header
