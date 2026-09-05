@@ -31,4 +31,6 @@ export const userController = {
     const user = await userService.setActiveStatus((req.params.id as string), req.body.isActive)
     return sendSuccess(res, 200, 'Client status updated', user)
   }),
+  createEditor: asyncHandler(async (req: Request, res: Response) =>
+    sendSuccess(res, 201, 'Editor account created', await userService.createEditor(req.body))),
 }

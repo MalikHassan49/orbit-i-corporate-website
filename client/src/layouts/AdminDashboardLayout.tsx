@@ -16,6 +16,7 @@ import {
 import { DashboardSidebar, type SidebarNavItem } from '@/components/dashboard/DashboardSidebar'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
 import { ROUTES } from '@/constants'
+import { useAuth } from '@/contexts/AuthContext'
 
 const navItems: SidebarNavItem[] = [
   { label: 'Overview', to: ROUTES.adminDashboard, icon: LayoutDashboard, end: true },
@@ -27,6 +28,7 @@ const navItems: SidebarNavItem[] = [
   { label: 'Applications', to: ROUTES.adminApplications, icon: FileText },
   { label: 'Leads', to: ROUTES.adminLeads, icon: Inbox },
   { label: 'Case Studies', to: ROUTES.adminCaseStudies, icon: FileText },
+  { label: 'Blog', to: ROUTES.adminBlog, icon: FileText },
   { label: 'Testimonials', to: ROUTES.adminTestimonials, icon: Star },
   { label: 'Team', to: ROUTES.adminTeam, icon: UsersRound },
   { label: 'Settings', to: ROUTES.adminSettings, icon: Settings },
@@ -42,6 +44,7 @@ const titleByPath: Record<string, string> = {
   [ROUTES.adminApplications]: 'Applications',
   [ROUTES.adminLeads]: 'Leads',
   [ROUTES.adminCaseStudies]: 'Case Studies',
+  [ROUTES.adminBlog]: 'Blog',
   [ROUTES.adminTestimonials]: 'Testimonials',
   [ROUTES.adminTeam]: 'Team',
   [ROUTES.adminSettings]: 'Settings',
@@ -50,11 +53,13 @@ const titleByPath: Record<string, string> = {
 export function AdminDashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const { pathname } = useLocation()
+  const { user } = useAuth()
+  const visibleNavItems = user?.role === 'editor' ? navItems.filter((item) => item.to === ROUTES.adminBlog || item.to === ROUTES.adminCaseStudies) : navItems
 
   return (
     <div className="flex min-h-screen bg-[var(--color-background)]">
       <DashboardSidebar
-        items={navItems}
+        items={visibleNavItems}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
         footerLabel="ORBIT-I Admin Console"

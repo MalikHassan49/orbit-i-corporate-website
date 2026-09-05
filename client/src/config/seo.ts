@@ -92,6 +92,16 @@ export const PAGE_SEO = {
     description: `Terms governing use of the ${BRAND.legalName} website and client platform.`,
     path: '/terms-and-conditions',
   }),
+  securityPolicy: page({
+    title: `Security Policy${titleSuffix}`,
+    description: `How ${BRAND.legalName} protects accounts, systems, and information.`,
+    path: '/security-policy',
+  }),
+  disclaimer: page({
+    title: `Website Disclaimer${titleSuffix}`,
+    description: `Important disclaimers about information and services published by ${BRAND.legalName}.`,
+    path: '/disclaimer',
+  }),
   login: page({
     title: `Log In${titleSuffix}`,
     description: 'Log in to your ORBIT-I client or admin dashboard.',
@@ -184,5 +194,18 @@ export function buildCreativeWorkJsonLd(caseStudy: { projectName: string; proble
     name: caseStudy.projectName,
     description: caseStudy.problem,
     creator: { '@type': 'Organization', name: SITE_NAME },
+  }
+}
+
+export function buildArticleJsonLd(post: { title: string; excerpt: string; slug: string; publishedAt?: string; coverImage?: string }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt,
+    url: `${SITE_URL}/blog/${post.slug}`,
+    datePublished: post.publishedAt,
+    image: post.coverImage ? [post.coverImage] : undefined,
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
   }
 }
