@@ -144,4 +144,10 @@ export const adminService = {
   async deleteTeamMember(id: string) {
     await apiClient.delete<ApiResponse<null>>(`/team/${id}`)
   },
+  async getCmsMetrics() {
+    const { data } = await apiClient.get<ApiResponse<{
+      totalPosts: number; publishedPosts: number; draftPosts: number; scheduledPosts: number; totalCategories: number; totalTags: number; totalAuthors: number; seoIssues: number; mostViewedPosts: Array<{ title: string; slug: string; views: number }>; analytics: { provider: string; visitors: number | null; pageViews: number | null; organicTraffic: number | null }
+    }>>('/admin/cms-dashboard')
+    return data.data
+  },
 }

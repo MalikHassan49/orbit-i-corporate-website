@@ -5,10 +5,12 @@ interface SeoProps extends PageSeo {
   /** One or more JSON-LD structured-data objects to inject as <script type="application/ld+json"> tags. */
   jsonLd?: object | object[]
   image?: string
+  canonicalUrl?: string
+  robots?: string
 }
 
-export function SEO({ title, description, path, keywords, noindex, jsonLd, image }: SeoProps) {
-  const canonicalUrl = `${SITE_URL}${path}`
+export function SEO({ title, description, path, keywords, noindex, jsonLd, image, canonicalUrl: explicitCanonicalUrl, robots }: SeoProps) {
+  const canonicalUrl = explicitCanonicalUrl || `${SITE_URL}${path}`
   const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
 
   return (
@@ -17,10 +19,10 @@ export function SEO({ title, description, path, keywords, noindex, jsonLd, image
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
       <link rel="canonical" href={canonicalUrl} />
-      <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+      <meta name="robots" content={robots || (noindex ? 'noindex, nofollow' : 'index, follow')} />
 
       {/* Open Graph */}
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={jsonLdItems.some((item) => (item as { '@type'?: string })['@type'] === 'Article') ? 'article' : 'website'} />
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />

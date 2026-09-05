@@ -4,6 +4,9 @@ const categorySchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     slug: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
+    description: { type: String, trim: true, maxlength: 500 },
+    seoTitle: { type: String, trim: true, maxlength: 180 },
+    metaDescription: { type: String, trim: true, maxlength: 320 },
   },
   { timestamps: true }
 )

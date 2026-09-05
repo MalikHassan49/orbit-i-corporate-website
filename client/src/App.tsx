@@ -14,7 +14,7 @@ import { ServiceDetailPage } from '@/pages/public/ServiceDetailPage'
 import { ProductsPage } from '@/pages/public/ProductsPage'
 import { ProductDetailPage } from '@/pages/public/ProductDetailPage'
 import { CaseStudiesPage, CaseStudyDetailPage } from '@/pages/public/CaseStudiesPages'
-import { BlogPage, BlogPostPage } from '@/pages/public/BlogPages'
+import { BlogPage, BlogPostPage, BlogTaxonomyPage } from '@/pages/public/BlogPages'
 import { TeamPage } from '@/pages/public/TeamPage'
 import { CareersPage, JobDetailPage } from '@/pages/public/CareersPages'
 import { ContactPage } from '@/pages/public/ContactPage'
@@ -71,6 +71,8 @@ function App() {
               <Route path={ROUTES.caseStudies} element={<CaseStudiesPage />} />
               <Route path="/case-studies/:slug" element={<CaseStudyDetailPage />} />
               <Route path={ROUTES.blog} element={<BlogPage />} />
+              <Route path="/blog/category/:slug" element={<BlogTaxonomyPage type="category" />} />
+              <Route path="/blog/tag/:slug" element={<BlogTaxonomyPage type="tag" />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
               <Route path={ROUTES.team} element={<TeamPage />} />
               <Route path={ROUTES.careers} element={<CareersPage />} />

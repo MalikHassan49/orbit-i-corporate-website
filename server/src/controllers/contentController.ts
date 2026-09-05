@@ -84,6 +84,10 @@ export const adminDashboardController = {
     const metrics = await adminDashboardService.getMetrics()
     return sendSuccess(res, 200, 'Metrics fetched', metrics)
   }),
+  getCmsMetrics: asyncHandler(async (_req: Request, res: Response) => {
+    const metrics = await adminDashboardService.getCmsMetrics()
+    return sendSuccess(res, 200, 'CMS metrics fetched', metrics)
+  }),
 }
 
 export const teamController = {
@@ -114,6 +118,7 @@ export const blogPostController = {
     const result = await blogPostService.list({
       category: req.query.category as string | undefined,
       tag: req.query.tag as string | undefined,
+      search: req.query.search as string | undefined,
       page: req.query.page ? Number(req.query.page) : undefined,
       limit: req.query.limit ? Number(req.query.limit) : undefined,
       includeDrafts: Boolean(req.user),
@@ -127,7 +132,7 @@ export const blogPostController = {
     return sendSuccess(res, 201, 'Blog post created', await blogPostService.create(req.body, req.user.id))
   }),
   update: asyncHandler(async (req: Request, res: Response) =>
-    sendSuccess(res, 200, 'Blog post updated', await blogPostService.update(req.params.id as string, req.body))),
+    sendSuccess(res, 200, 'Blog post updated', await blogPostService.update(req.params.id as string, req.body, req.user?.id))),
   remove: asyncHandler(async (req: Request, res: Response) => {
     await blogPostService.remove(req.params.id as string)
     return sendSuccess(res, 200, 'Blog post deleted', null)
@@ -136,4 +141,14 @@ export const blogPostController = {
     sendSuccess(res, 200, 'Blog post published', await blogPostService.setPublished(req.params.id as string, true))),
   unpublish: asyncHandler(async (req: Request, res: Response) =>
     sendSuccess(res, 200, 'Blog post unpublished', await blogPostService.setPublished(req.params.id as string, false))),
+  duplicate: asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) throw ApiError.unauthorized()
+    return sendSuccess(res, 201, 'Blog post duplicated', await blogPostService.duplicate(req.params.id as string, req.user.id))
+  }),
+  revisions: asyncHandler(async (req: Request, res: Response) =>
+    sendSuccess(res, 200, 'Revisions fetched', await blogPostService.revisions(req.params.id as string))),
+  restoreRevision: asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) throw ApiError.unauthorized()
+    return sendSuccess(res, 200, 'Revision restored', await blogPostService.restoreRevision(req.params.id as string, req.params.revisionId as string, req.user.id))
+  }),
 }

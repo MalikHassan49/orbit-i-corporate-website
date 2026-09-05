@@ -39,7 +39,7 @@ export const testimonialService = {
 }
 
 export const blogService = {
-  async list(params?: { category?: string; tag?: string; page?: number }) {
+  async list(params?: { category?: string; tag?: string; search?: string; page?: number }) {
     const { data } = await apiClient.get<ApiResponse<{ items: BlogPost[]; page: number; totalPages: number; totalItems: number }>>('/blog', { params })
     return data.data
   },
@@ -60,6 +60,9 @@ export const blogService = {
     return data.data
   },
   async remove(id: string) { await apiClient.delete(`/blog/${id}`) },
+  async duplicate(id: string) { return (await apiClient.post<ApiResponse<BlogPost>>(`/blog/${id}/duplicate`)).data.data },
+  async revisions(id: string) { return (await apiClient.get<ApiResponse<Array<{ id: string; title: string; excerpt: string; content: string; createdAt: string }>>>(`/blog/${id}/revisions`)).data.data },
+  async restoreRevision(id: string, revisionId: string) { return (await apiClient.post<ApiResponse<BlogPost>>(`/blog/${id}/revisions/${revisionId}/restore`)).data.data },
   async publish(id: string) { return (await apiClient.patch<ApiResponse<BlogPost>>(`/blog/${id}/publish`)).data.data },
   async unpublish(id: string) { return (await apiClient.patch<ApiResponse<BlogPost>>(`/blog/${id}/unpublish`)).data.data },
 }
