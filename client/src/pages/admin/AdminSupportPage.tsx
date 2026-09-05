@@ -40,22 +40,35 @@ export function AdminSupportPage() {
     { header: 'Subject', render: (ticket) => <span className="font-medium">{ticket.subject}</span> },
     {
       header: 'Client',
-      render: (ticket) => <div><p>{ticket.user.fullName}</p><p className="text-xs text-[var(--color-text-secondary)]">{ticket.user.email}</p></div>,
+      render: (ticket) => (
+        <div>
+          <p>{ticket.user.fullName}</p>
+          <p className="text-xs text-[var(--color-text-secondary)]">{ticket.user.email}</p>
+        </div>
+      ),
     },
-    { header: 'Status', render: (ticket) => <Badge tone={statusTone[ticket.status]}>{ticket.status.replace('_', ' ')}</Badge> },
+    {
+      header: 'Status',
+      render: (ticket) => <Badge tone={statusTone[ticket.status]}>{ticket.status.replace('_', ' ')}</Badge>,
+    },
     { header: 'Opened', render: (ticket) => formatDate(ticket.createdAt) },
     {
       header: '',
       render: (ticket) => (
-        <select
-          value={ticket.status}
-          disabled={updatingId === ticket.id}
-          onChange={(event) => void handleStatusChange(ticket.id, event.target.value as SupportTicketStatus)}
-          aria-label={`Update status for ${ticket.subject}`}
-          className="h-9 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-background-elevated)] px-2.5 text-sm text-[var(--color-text-primary)]"
-        >
-          {statuses.map((status) => <option key={status} value={status}>{status.replace('_', ' ')}</option>)}
-        </select>
+        <div className="flex items-center gap-2">
+          <select
+            value={ticket.status}
+            disabled={updatingId === ticket.id}
+            onChange={(event) => handleStatusChange(ticket.id, event.target.value as SupportTicketStatus)}
+            aria-label={`Update status for ${ticket.subject}`}
+            className="h-9 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-background-elevated)] px-2.5 text-sm text-[var(--color-text-primary)] focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+          >
+            {statuses.map((status) => (
+              <option key={status} value={status}>{status.replace('_', ' ')}</option>
+            ))}
+          </select>
+          {updatingId === ticket.id && <span className="text-xs text-[var(--color-text-secondary)]">Saving...</span>}
+        </div>
       ),
     },
   ]
@@ -67,8 +80,18 @@ export function AdminSupportPage() {
         <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Review and manage client support tickets.</p>
       </div>
       {updateError && <p className="text-sm text-[var(--color-danger)]">{updateError}</p>}
-      {isLoading ? <PageLoader /> : error ? <ErrorState onRetry={refetch} /> : (
-        <DataTable columns={columns} rows={tickets ?? []} keyField={(ticket) => ticket.id} emptyTitle="No support tickets" />
+      {isLoading ? (
+        <PageLoader />
+      ) : error ? (
+        <ErrorState onRetry={refetch} />
+      ) : (
+        <DataTable
+          columns={columns}
+          rows={tickets ?? []}
+          keyField={(ticket) => ticket.id}
+          emptyTitle="No support tickets"
+          emptyDescription="Client support tickets will appear here."
+        />
       )}
     </div>
   )
