@@ -10,6 +10,16 @@ const caseStudySchema = new Schema(
     technologies: { type: [String], default: [] },
     results: { type: [String], default: [] },
     coverImage: { type: String },
+    gallery: { type: [String], default: [] },
+    content: { type: String },
+    testimonial: {
+      quote: { type: String },
+      author: { type: String },
+      role: { type: String },
+    },
+    metrics: { type: [{ label: String, value: String }], default: [] },
+    seoTitle: { type: String, trim: true, maxlength: 180 },
+    seoDescription: { type: String, trim: true, maxlength: 320 },
     isPublished: { type: Boolean, default: true },
   },
   { timestamps: true }

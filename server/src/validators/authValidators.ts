@@ -24,3 +24,9 @@ export const updateProfileSchema = z.object({
   fullName: z.string().trim().min(2).max(120).optional(),
   avatarUrl: z.string().url().optional(),
 })
+
+export const createEditorSchema = z.object({
+  fullName: z.string().trim().min(2).max(120),
+  email: z.string().trim().toLowerCase().email(),
+  password: z.string().min(8),
+})

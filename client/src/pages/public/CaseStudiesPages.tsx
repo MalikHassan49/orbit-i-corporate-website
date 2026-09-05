@@ -127,6 +127,22 @@ export function CaseStudyDetailPage() {
         </div>
       </section>
 
+      {study.content && (
+        <section className="border-b border-[var(--color-border)] py-16">
+          <div className="container-app">
+            <div className="prose prose-invert max-w-3xl text-[var(--color-text-secondary)]" dangerouslySetInnerHTML={{ __html: study.content }} />
+          </div>
+        </section>
+      )}
+
+      {study.metrics && study.metrics.length > 0 && (
+        <section className="border-b border-[var(--color-border)] py-12">
+          <div className="container-app grid gap-4 sm:grid-cols-3">
+            {study.metrics.map((metric) => <Card hoverable={false} key={`${metric.label}-${metric.value}`}><p className="text-2xl font-semibold text-[var(--color-text-primary)]">{metric.value}</p><p className="mt-1 text-sm text-[var(--color-text-secondary)]">{metric.label}</p></Card>)}
+          </div>
+        </section>
+      )}
+
       <section className="border-b border-[var(--color-border)] py-16">
         <div className="container-app">
           <h2 className="text-xl font-semibold text-[var(--color-text-primary)]">Results</h2>

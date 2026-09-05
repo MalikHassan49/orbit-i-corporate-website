@@ -13,10 +13,11 @@ import type { UserRole } from '@/types'
  */
 
 function isAdminRole(role: UserRole | undefined) {
-  return role === 'admin' || role === 'super_admin'
+  return role === 'editor' || role === 'admin' || role === 'super_admin'
 }
 
 function defaultDashboardFor(role: UserRole | undefined) {
+  if (role === 'editor') return ROUTES.adminBlog
   return isAdminRole(role) ? ROUTES.adminDashboard : ROUTES.clientDashboard
 }
 
@@ -42,6 +43,14 @@ export function RoleRoute({ roles, children }: { roles: UserRole[]; children: Re
   if (!user || !roles.includes(user.role)) return <Navigate to={defaultDashboardFor(user?.role)} replace />
 
   return <>{children}</>
+}
+
+export function ContentRoleRoute({ children }: { children: ReactNode }) {
+  return <RoleRoute roles={['editor', 'admin', 'super_admin']}>{children}</RoleRoute>
+}
+
+export function SensitiveRoleRoute({ children }: { children: ReactNode }) {
+  return <RoleRoute roles={['admin', 'super_admin']}>{children}</RoleRoute>
 }
 
 export function GuestOnlyRoute({ children }: { children: ReactNode }) {

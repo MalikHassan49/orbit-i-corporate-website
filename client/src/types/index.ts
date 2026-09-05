@@ -4,7 +4,7 @@
 // grows, consider generating these from the API's OpenAPI/Zod schemas.
 // ---------------------------------------------------------------------------
 
-export type UserRole = 'client' | 'admin' | 'super_admin'
+export type UserRole = 'client' | 'editor' | 'admin' | 'super_admin'
 
 export interface User {
   id: string
@@ -121,6 +121,31 @@ export interface CaseStudy {
   technologies: string[]
   results: string[]
   coverImage: string
+  gallery?: string[]
+  content?: string
+  testimonial?: { quote?: string; author?: string; role?: string }
+  metrics?: { label: string; value: string }[]
+  seoTitle?: string
+  seoDescription?: string
+}
+
+export interface Category { id: string; name: string; slug: string }
+export interface Tag { id: string; name: string; slug: string }
+export interface BlogPost {
+  id: string
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  coverImage?: string
+  category: Category
+  tags: Tag[]
+  author: Pick<User, 'id' | 'fullName'>
+  status: 'draft' | 'published'
+  publishedAt?: string
+  seoTitle?: string
+  seoDescription?: string
+  createdAt: string
 }
 
 export type EmploymentType = 'full_time' | 'part_time' | 'contract' | 'internship'

@@ -18,6 +18,7 @@ import { useFetch } from '@/hooks/useFetch'
 import { getApiErrorMessage } from '@/utils/apiError'
 import { CONTACT_EMAIL } from '@/config/socialLinks'
 import type { Job, CaseStudy, Testimonial, TeamMember } from '@/types'
+import { RichTextEditor } from '@/components/editor/RichTextEditor'
 
 // ---------------------------------------------------------------------------
 // Careers (Jobs)
@@ -256,6 +257,8 @@ const emptyCaseStudyForm = {
   solution: '',
   technologies: '',
   results: '',
+  content: '',
+  coverImage: '',
 }
 
 export function AdminCaseStudiesPage() {
@@ -275,7 +278,7 @@ export function AdminCaseStudiesPage() {
 
   const openEditModal = (item: CaseStudy) => {
     setEditingCaseStudy(item)
-    setForm({ projectName: item.projectName, clientIndustry: item.clientIndustry, problem: item.problem, solution: item.solution, technologies: item.technologies.join(', '), results: item.results.join(', ') })
+    setForm({ projectName: item.projectName, clientIndustry: item.clientIndustry, problem: item.problem, solution: item.solution, technologies: item.technologies.join(', '), results: item.results.join(', '), content: item.content || '', coverImage: item.coverImage || '' })
     setFormError(null)
     setIsModalOpen(true)
   }
@@ -295,6 +298,8 @@ export function AdminCaseStudiesPage() {
         solution: form.solution,
         technologies: form.technologies.split(',').map((t) => t.trim()).filter(Boolean),
         results: form.results.split(',').map((r) => r.trim()).filter(Boolean),
+        content: form.content,
+        coverImage: form.coverImage || undefined,
       }
       if (editingCaseStudy) {
         await adminService.updateCaseStudy(editingCaseStudy.id, payload)
@@ -353,6 +358,11 @@ export function AdminCaseStudiesPage() {
           </div>
           <Input label="Technologies (comma-separated)" value={form.technologies} onChange={(e) => setForm({ ...form, technologies: e.target.value })} placeholder="React, Node.js, MongoDB" />
           <Input label="Results (comma-separated)" value={form.results} onChange={(e) => setForm({ ...form, results: e.target.value })} placeholder="Reduced dispatch time, Removed manual work" />
+          <Input label="Cover image URL (optional)" value={form.coverImage} onChange={(e) => setForm({ ...form, coverImage: e.target.value })} placeholder="https://..." />
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-[var(--color-text-primary)]">Case study content</label>
+            <RichTextEditor value={form.content} onChange={(content) => setForm({ ...form, content })} />
+          </div>
           {formError && <p className="text-sm text-[var(--color-danger)]">{formError}</p>}
           <Button onClick={handleSubmit} isLoading={isSubmitting} className="mt-2">
             {editingCaseStudy ? 'Save changes' : 'Create case study'}

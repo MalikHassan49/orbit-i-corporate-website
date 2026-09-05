@@ -1,9 +1,10 @@
 import type { Request, Response } from 'express'
-import { serviceContentService, caseStudyService, testimonialService } from '../services/contentServices'
+import { serviceContentService, caseStudyService, testimonialService, blogPostService } from '../services/contentServices'
 import { teamService } from '../services/teamService'
 import { adminDashboardService } from '../services/adminDashboardService'
 import { asyncHandler } from '../utils/asyncHandler'
 import { sendSuccess } from '../utils/ApiResponse'
+import { ApiError } from '../utils/ApiError'
 
 export const serviceController = {
   list: asyncHandler(async (_req: Request, res: Response) => {
@@ -106,4 +107,33 @@ export const teamController = {
     await teamService.remove((req.params.id as string))
     return sendSuccess(res, 200, 'Team member removed', null)
   }),
+}
+
+export const blogPostController = {
+  list: asyncHandler(async (req: Request, res: Response) => {
+    const result = await blogPostService.list({
+      category: req.query.category as string | undefined,
+      tag: req.query.tag as string | undefined,
+      page: req.query.page ? Number(req.query.page) : undefined,
+      limit: req.query.limit ? Number(req.query.limit) : undefined,
+      includeDrafts: Boolean(req.user),
+    })
+    return sendSuccess(res, 200, 'Blog posts fetched', result)
+  }),
+  getBySlug: asyncHandler(async (req: Request, res: Response) =>
+    sendSuccess(res, 200, 'Blog post fetched', await blogPostService.getBySlug(req.params.slug as string, Boolean(req.user)))),
+  create: asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) throw ApiError.unauthorized()
+    return sendSuccess(res, 201, 'Blog post created', await blogPostService.create(req.body, req.user.id))
+  }),
+  update: asyncHandler(async (req: Request, res: Response) =>
+    sendSuccess(res, 200, 'Blog post updated', await blogPostService.update(req.params.id as string, req.body))),
+  remove: asyncHandler(async (req: Request, res: Response) => {
+    await blogPostService.remove(req.params.id as string)
+    return sendSuccess(res, 200, 'Blog post deleted', null)
+  }),
+  publish: asyncHandler(async (req: Request, res: Response) =>
+    sendSuccess(res, 200, 'Blog post published', await blogPostService.setPublished(req.params.id as string, true))),
+  unpublish: asyncHandler(async (req: Request, res: Response) =>
+    sendSuccess(res, 200, 'Blog post unpublished', await blogPostService.setPublished(req.params.id as string, false))),
 }

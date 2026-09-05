@@ -1,5 +1,7 @@
 import { User } from '../models/User'
 import { ApiError } from '../utils/ApiError'
+import bcrypt from 'bcryptjs'
+import { ROLES } from '../constants/roles'
 
 export const userService = {
   async getById(id: string) {
@@ -41,5 +43,15 @@ export const userService = {
     const user = await User.findByIdAndUpdate(id, { isActive }, { new: true })
     if (!user) throw ApiError.notFound('User not found')
     return user
+  },
+  async createEditor(input: { fullName: string; email: string; password: string }) {
+    if (await User.findOne({ email: input.email })) throw ApiError.conflict('An account with this email already exists')
+    return User.create({
+      fullName: input.fullName,
+      email: input.email,
+      passwordHash: await bcrypt.hash(input.password, 12),
+      role: ROLES.EDITOR,
+      isVerified: true,
+    })
   },
 }

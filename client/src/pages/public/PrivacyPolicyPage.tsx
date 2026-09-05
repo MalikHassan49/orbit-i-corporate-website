@@ -22,13 +22,16 @@ export function PrivacyPolicyPage() {
         </p>
 
         <h2>Information We Collect</h2>
-        <p>We collect information in two general ways: information you provide directly, and information collected automatically.</p>
+        <p>We collect information you provide directly, information generated when you use the site or platform, and information received from service providers or business contacts. We collect only what is reasonably needed for the purposes described below.</p>
 
-        <h2>Information Provided by Users</h2>
-        <p>
-          Contact form submissions, account registration details, order and project information, and
-          job application materials (including resume links) submitted directly by you.
-        </p>
+        <h2>Categories of personal information</h2>
+        <ul>
+          <li><strong>Identity and contact:</strong> name, email, phone, company, address, and account profile details.</li>
+          <li><strong>Account and project:</strong> login credentials (stored as hashes), orders, project records, support requests, and communications.</li>
+          <li><strong>Transaction and payment:</strong> order, invoice, currency, payment status, and payment reference. We do not ask you to send full card numbers, PINs, passwords, or one-time codes through forms or email; payment details are handled by the relevant payment provider.</li>
+          <li><strong>Technical and usage:</strong> IP address, device and browser information, logs, cookies, approximate location, and interactions used for security and performance.</li>
+          <li><strong>Recruitment:</strong> application details, resume links, portfolio, LinkedIn profile, and correspondence.</li>
+        </ul>
 
         <h2>Automatically Collected Information</h2>
         <p>
@@ -37,10 +40,10 @@ export function PrivacyPolicyPage() {
         </p>
 
         <h2>How We Use Information</h2>
-        <p>
-          To respond to inquiries, operate client accounts, process orders and projects, provide
-          support, and improve this website. We do not sell personal information to third parties.
-        </p>
+        <p>We use information to provide and secure the website and client platform, authenticate accounts, fulfil orders and projects, process support and applications, communicate with you, prevent abuse, improve products, meet legal obligations, and keep business records. We do not sell personal information.</p>
+
+        <h2>Payment safety warning</h2>
+        <p>Never send card numbers, CVV, online-banking passwords, authentication codes, or wallet private keys to ORBIT-I by email, chat, or a contact form. Use only payment instructions presented through an authorized checkout or documented invoice, and contact us if a request appears suspicious.</p>
 
         <h2>Cookies</h2>
         <p>
@@ -86,6 +89,8 @@ export function PrivacyPolicyPage() {
           </a>
           .
         </p>
+        <h2>Business Registration</h2>
+        <p>ORBIT-I Private Limited operates as a company incorporated with the Securities and Exchange Commission of Pakistan (SECP), with applicable Federal Board of Revenue (FBR) registration and Pakistan Software Export Board (PSEB) participation.</p>
       </LegalPageLayout>
     </>
   )

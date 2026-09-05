@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { Logo } from './Logo'
 import { SocialLinks } from '@/components/social/SocialLinks'
 import { FOOTER_LINKS, ROUTES } from '@/constants'
-import { OFFICE_LOCATION } from '@/config/companyInfo'
+import { OFFICE_LOCATION, COMPLIANCE_STATEMENT } from '@/config/companyInfo'
 import { CONTACT_EMAIL } from '@/config/socialLinks'
 
 export function Footer() {
@@ -24,6 +24,7 @@ export function Footer() {
             {CONTACT_EMAIL}
           </a>
           <p className="text-sm text-[var(--color-text-secondary)]">{OFFICE_LOCATION}</p>
+          <p className="max-w-sm text-xs leading-relaxed text-[var(--color-text-muted)]">{COMPLIANCE_STATEMENT}</p>
           <SocialLinks className="mt-2" />
         </div>
 
