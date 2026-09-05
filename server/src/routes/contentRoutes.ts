@@ -46,3 +46,6 @@ blogPostRoutes.patch('/:id', authenticate, authorize(...SEO_CONTENT_ROLES), vali
 blogPostRoutes.delete('/:id', authenticate, authorize(...SEO_CONTENT_ROLES), blogPostController.remove)
 blogPostRoutes.patch('/:id/publish', authenticate, authorize(...SEO_CONTENT_ROLES), blogPostController.publish)
 blogPostRoutes.patch('/:id/unpublish', authenticate, authorize(...SEO_CONTENT_ROLES), blogPostController.unpublish)
+blogPostRoutes.post('/:id/duplicate', authenticate, authorize(...SEO_CONTENT_ROLES), blogPostController.duplicate)
+blogPostRoutes.get('/:id/revisions', authenticate, authorize(...SEO_CONTENT_ROLES), blogPostController.revisions)
+blogPostRoutes.post('/:id/revisions/:revisionId/restore', authenticate, authorize(...SEO_CONTENT_ROLES), blogPostController.restoreRevision)

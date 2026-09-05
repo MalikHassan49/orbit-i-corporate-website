@@ -11,7 +11,7 @@ import { formatDate } from '@/utils/formatters'
 import { slugify } from '@/utils/formatters'
 import { careersService, type JobApplicationRecord } from '@/services/careersService'
 import { contactService, type ContactMessageRecord } from '@/services/contactService'
-import { blogService, caseStudyService, testimonialService, taxonomyService } from '@/services/contentService'
+import { caseStudyService, testimonialService, taxonomyService } from '@/services/contentService'
 import { teamService } from '@/services/teamService'
 import { adminService } from '@/services/adminService'
 import { useFetch } from '@/hooks/useFetch'
@@ -575,14 +575,7 @@ export function AdminTeamPage() {
 // SEO dashboard and content management
 // ---------------------------------------------------------------------------
 export function AdminSeoDashboardPage() {
-  const { data: posts, isLoading, error, refetch } = useFetch(() => blogService.listAll(), [])
-  const { data: caseStudies } = useFetch(() => caseStudyService.listAll(), [])
-  const { data: categories } = useFetch(() => taxonomyService.categories(), [])
-  const { data: tags } = useFetch(() => taxonomyService.tags(), [])
-  const blogCount = Array.isArray(posts) ? posts.length : 0
-  const caseStudyCount = Array.isArray(caseStudies) ? caseStudies.length : 0
-  const categoryCount = Array.isArray(categories) ? categories.length : 0
-  const tagCount = Array.isArray(tags) ? tags.length : 0
+  const { data: metrics, isLoading, error, refetch } = useFetch(() => adminService.getCmsMetrics(), [])
 
   return (
     <div className="flex flex-col gap-6">
@@ -594,15 +587,15 @@ export function AdminSeoDashboardPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card hoverable={false}>
           <p className="text-sm text-[var(--color-text-secondary)]">Blog posts</p>
-          <p className="mt-2 text-3xl font-semibold text-[var(--color-text-primary)]">{isLoading ? '…' : blogCount}</p>
+          <p className="mt-2 text-3xl font-semibold text-[var(--color-text-primary)]">{isLoading ? '…' : metrics?.totalPosts}</p>
         </Card>
         <Card hoverable={false}>
           <p className="text-sm text-[var(--color-text-secondary)]">Case studies</p>
-          <p className="mt-2 text-3xl font-semibold text-[var(--color-text-primary)]">{caseStudyCount}</p>
+          <p className="mt-2 text-3xl font-semibold text-[var(--color-text-primary)]">{metrics?.publishedPosts ?? 0}</p>
         </Card>
         <Card hoverable={false}>
           <p className="text-sm text-[var(--color-text-secondary)]">Taxonomy</p>
-          <p className="mt-2 text-3xl font-semibold text-[var(--color-text-primary)]">{categoryCount + tagCount}</p>
+          <p className="mt-2 text-3xl font-semibold text-[var(--color-text-primary)]">{(metrics?.totalCategories ?? 0) + (metrics?.totalTags ?? 0)}</p>
         </Card>
       </div>
 
@@ -611,7 +604,9 @@ export function AdminSeoDashboardPage() {
           <div className="flex flex-col gap-3">
             <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Quick SEO actions</h3>
             <ul className="space-y-2 text-sm text-[var(--color-text-secondary)]">
-              <li>• Review and publish new blog content.</li>
+              <li>• {metrics?.draftPosts ?? 0} draft posts need review.</li>
+              <li>• {metrics?.scheduledPosts ?? 0} posts are scheduled.</li>
+              <li>• {metrics?.seoIssues ?? 0} posts need SEO metadata.</li>
               <li>• Update case study metadata and summary copy.</li>
               <li>• Manage categories and tags for discoverability.</li>
               <li>• Maintain search-friendly titles and descriptions for content pages.</li>

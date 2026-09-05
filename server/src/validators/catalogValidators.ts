@@ -70,12 +70,20 @@ export const createBlogPostSchema = z.object({
   excerpt: z.string().trim().min(10).max(320),
   content: z.string().min(1).max(500000),
   coverImage: z.string().url().optional(),
+  ogImage: z.string().url().optional(),
+  canonicalUrl: z.string().url().optional(),
   category: z.string().min(1),
   tags: z.array(z.string().min(1)).default([]),
-  status: z.enum(['draft', 'published']).default('draft'),
+  status: z.enum(['draft', 'scheduled', 'published']).default('draft'),
   publishedAt: z.coerce.date().optional(),
+  scheduledAt: z.coerce.date().optional(),
   seoTitle: z.string().trim().max(180).optional(),
   seoDescription: z.string().trim().max(320).optional(),
+  focusKeyword: z.string().trim().max(120).optional(),
+  secondaryKeywords: z.array(z.string().trim().max(120)).default([]),
+  ogTitle: z.string().trim().max(180).optional(),
+  ogDescription: z.string().trim().max(320).optional(),
+  robots: z.enum(['index,follow', 'noindex,follow', 'index,nofollow', 'noindex,nofollow']).optional(),
 })
 
 export const updateBlogPostSchema = createBlogPostSchema.partial()

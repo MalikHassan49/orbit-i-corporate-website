@@ -141,10 +141,19 @@ export interface BlogPost {
   category: Category
   tags: Tag[]
   author: Pick<User, 'id' | 'fullName'>
-  status: 'draft' | 'published'
+  status: 'draft' | 'scheduled' | 'published'
   publishedAt?: string
   seoTitle?: string
   seoDescription?: string
+  focusKeyword?: string
+  secondaryKeywords?: string[]
+  canonicalUrl?: string
+  ogImage?: string
+  ogTitle?: string
+  ogDescription?: string
+  robots?: string
+  scheduledAt?: string
+  views?: number
   createdAt: string
 }
 

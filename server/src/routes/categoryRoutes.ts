@@ -45,6 +45,8 @@ tagRouter.delete('/:id', authenticate, authorize(...SEO_CONTENT_ROLES), asyncHan
   await tagService.remove(req.params.id as string)
   return sendSuccess(res, 200, 'Tag deleted', null)
 }))
+tagRouter.post('/:id/merge/:targetId', authenticate, authorize(...SEO_CONTENT_ROLES), asyncHandler(async (req, res) =>
+  sendSuccess(res, 200, 'Tags merged', await tagService.merge(req.params.id as string, req.params.targetId as string))))
 router.use('/tags', tagRouter)
 
 export default router

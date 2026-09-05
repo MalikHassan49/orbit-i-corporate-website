@@ -5,7 +5,7 @@ import { authenticate, authorize } from '../middleware/auth'
 import { validateBody } from '../middleware/validate'
 import { publicWriteRateLimiter } from '../middleware/rateLimiter'
 import { contactMessageSchema } from '../validators/catalogValidators'
-import { ADMIN_ROLES } from '../constants/roles'
+import { ADMIN_ROLES, SEO_CONTENT_ROLES } from '../constants/roles'
 
 export const contactRoutes = Router()
 contactRoutes.post('/', publicWriteRateLimiter, validateBody(contactMessageSchema), contactController.submit)
@@ -14,3 +14,4 @@ contactRoutes.patch('/:id/status', authenticate, authorize(...ADMIN_ROLES), cont
 
 export const adminRoutes = Router()
 adminRoutes.get('/dashboard', authenticate, authorize(...ADMIN_ROLES), adminDashboardController.getMetrics)
+adminRoutes.get('/cms-dashboard', authenticate, authorize(...SEO_CONTENT_ROLES), adminDashboardController.getCmsMetrics)
