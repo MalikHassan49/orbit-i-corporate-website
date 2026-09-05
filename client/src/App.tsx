@@ -40,7 +40,6 @@ import { AdminClientsPage } from '@/pages/admin/AdminClientsPage'
 import { AdminProductsPage } from '@/pages/admin/AdminProductsPage'
 import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage'
 import { AdminProjectsPage } from '@/pages/admin/AdminProjectsPage'
-import { AdminSupportPage } from '@/pages/admin/AdminSupportPage'
 import {
   AdminCareersPage,
   AdminApplicationsPage,
@@ -53,6 +52,7 @@ import {
   AdminSettingsPage,
   AdminSeoDashboardPage,
 } from '@/pages/admin/AdminMiscPages'
+import { AdminSupportPage } from './pages/admin/AdminSupportPage'
 
 function App() {
   return (
