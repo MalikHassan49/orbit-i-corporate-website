@@ -36,7 +36,6 @@ import { ClientProfilePage, ClientSettingsPage, ClientSupportPage, ClientInvoice
 
 import { AdminOverviewPage } from '@/pages/admin/AdminOverviewPage'
 import { AdminBlogPage } from '@/pages/admin/AdminBlogPage'
-import { AdminSupportPage } from '@/pages/admin/AdminSupportPage'
 import { AdminClientsPage } from '@/pages/admin/AdminClientsPage'
 import { AdminProductsPage } from '@/pages/admin/AdminProductsPage'
 import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage'
