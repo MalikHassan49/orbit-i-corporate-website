@@ -30,3 +30,5 @@ export const createEditorSchema = z.object({
   email: z.string().trim().toLowerCase().email(),
   password: z.string().min(8),
 })
+
+export const createSeoManagerSchema = createEditorSchema

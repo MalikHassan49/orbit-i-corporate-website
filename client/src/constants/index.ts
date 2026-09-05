@@ -39,6 +39,7 @@ export const ROUTES = {
   clientInvoices: '/client/invoices',
 
   adminDashboard: '/admin/dashboard',
+  adminSeoDashboard: '/admin/seo',
   adminClients: '/admin/clients',
   adminProducts: '/admin/products',
   adminOrders: '/admin/orders',

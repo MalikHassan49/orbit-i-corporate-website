@@ -28,6 +28,7 @@ const navItems: SidebarNavItem[] = [
   { label: 'Careers', to: ROUTES.adminCareers, icon: Briefcase },
   { label: 'Applications', to: ROUTES.adminApplications, icon: FileText },
   { label: 'Leads', to: ROUTES.adminLeads, icon: Inbox },
+  { label: 'SEO Dashboard', to: ROUTES.adminSeoDashboard, icon: LayoutDashboard },
   { label: 'Support', to: ROUTES.adminSupport, icon: LifeBuoy },
   { label: 'Case Studies', to: ROUTES.adminCaseStudies, icon: FileText },
   { label: 'Blog', to: ROUTES.adminBlog, icon: FileText },
@@ -40,6 +41,7 @@ const navItems: SidebarNavItem[] = [
 
 const titleByPath: Record<string, string> = {
   [ROUTES.adminDashboard]: 'Overview',
+  [ROUTES.adminSeoDashboard]: 'SEO Dashboard',
   [ROUTES.adminClients]: 'Clients',
   [ROUTES.adminProducts]: 'Products',
   [ROUTES.adminOrders]: 'Orders',
@@ -61,9 +63,10 @@ export function AdminDashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const { pathname } = useLocation()
   const { user } = useAuth()
-  const visibleNavItems = user?.role === 'editor'
+  const visibleNavItems = user?.role === 'editor' || user?.role === 'seo_manager'
     ? navItems.filter(
-      (item) => item.to === ROUTES.adminBlog
+      (item) => item.to === ROUTES.adminSeoDashboard
+        || item.to === ROUTES.adminBlog
         || item.to === ROUTES.adminCaseStudies
         || item.to === ROUTES.adminCategories
         || item.to === ROUTES.adminTags,

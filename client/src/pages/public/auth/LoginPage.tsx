@@ -34,8 +34,8 @@ export function LoginPage() {
     setFormError(null)
     try {
       const loggedInUser = await login(values)
-      const isAdmin = loggedInUser.role === 'admin' || loggedInUser.role === 'super_admin'
-      const defaultRoute = isAdmin ? ROUTES.adminDashboard : ROUTES.clientDashboard
+      const isAdmin = loggedInUser.role === 'admin' || loggedInUser.role === 'super_admin' || loggedInUser.role === 'seo_manager'
+      const defaultRoute = isAdmin ? (loggedInUser.role === 'seo_manager' ? ROUTES.adminSeoDashboard : ROUTES.adminDashboard) : ROUTES.clientDashboard
       const redirectTo = (location.state as { from?: Location })?.from?.pathname ?? defaultRoute
       navigate(redirectTo, { replace: true })
     } catch (err) {

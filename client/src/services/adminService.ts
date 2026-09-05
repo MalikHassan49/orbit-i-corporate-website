@@ -26,6 +26,11 @@ export const adminService = {
     return data.data
   },
 
+  async createSeoManager(payload: { fullName: string; email: string; password: string }) {
+    const { data } = await apiClient.post<ApiResponse<User>>('/users/seo-managers', payload)
+    return data.data
+  },
+
   async setClientActive(id: string, isActive: boolean) {
     const { data } = await apiClient.patch<ApiResponse<User>>(`/users/${id}/status`, { isActive })
     return data.data
