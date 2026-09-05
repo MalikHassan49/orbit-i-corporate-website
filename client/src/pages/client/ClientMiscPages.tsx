@@ -1,13 +1,17 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import { Card } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
-import { Button } from '@/components/ui'
+import { Button, Modal } from '@/components/ui'
 import { Badge } from '@/components/ui/Badge'
-import { EmptyState } from '@/components/ui/States'
+import { EmptyState, ErrorState } from '@/components/ui/States'
+import { PageLoader } from '@/components/ui/Loader'
 import { DataTable, type DataTableColumn } from '@/components/dashboard/DataTable'
 import { useAuth } from '@/contexts/AuthContext'
 import { formatCurrency, formatDate } from '@/utils/formatters'
+import { getApiErrorMessage } from '@/utils/apiError'
+import { supportService } from '@/services/supportService'
+import { useFetch } from '@/hooks/useFetch'
 import type { Invoice, SupportTicket } from '@/types'
 
 export function ClientProfilePage() {
@@ -72,14 +76,53 @@ function ToggleRow({ label, description, checked, onChange }: { label: string; d
   )
 }
 
-const MOCK_TICKETS: SupportTicket[] = []
-
 export function ClientSupportPage() {
+  const { data: tickets, isLoading, error, refetch } = useFetch(() => supportService.listMine(), [])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [form, setForm] = useState({ subject: '', message: '' })
+  const [formError, setFormError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const columns: DataTableColumn<SupportTicket>[] = [
     { header: 'Subject', render: (t) => t.subject },
     { header: 'Status', render: (t) => <Badge tone="primary">{t.status}</Badge> },
     { header: 'Opened', render: (t) => formatDate(t.createdAt) },
   ]
+
+  const openModal = () => {
+    setForm({ subject: '', message: '' })
+    setFormError(null)
+    setIsModalOpen(true)
+  }
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!form.subject.trim() || !form.message.trim()) {
+      setFormError('Please fill in both the subject and message.')
+      return
+    }
+    if (form.subject.trim().length < 3) {
+      setFormError('Subject must be at least 3 characters.')
+      return
+    }
+    if (form.message.trim().length < 10) {
+      setFormError('Message must be at least 10 characters.')
+      return
+    }
+
+    setFormError(null)
+    setIsSubmitting(true)
+    try {
+      await supportService.create({ subject: form.subject.trim(), message: form.message.trim() })
+      setIsModalOpen(false)
+      setForm({ subject: '', message: '' })
+      refetch()
+    } catch (err) {
+      setFormError(getApiErrorMessage(err, 'Could not create your support ticket. Please try again.'))
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -88,9 +131,49 @@ export function ClientSupportPage() {
           <h2 className="font-display text-xl font-semibold text-[var(--color-text-primary)]">Support</h2>
           <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Open a ticket if you need help with an order or project.</p>
         </div>
-        <Button size="md">New ticket</Button>
+        <Button size="md" onClick={openModal}>New ticket</Button>
       </div>
-      <DataTable columns={columns} rows={MOCK_TICKETS} keyField={(t) => t.id} emptyTitle="No support tickets" emptyDescription="Open a ticket and our team will respond within one business day." />
+      {isLoading ? (
+        <PageLoader />
+      ) : error ? (
+        <ErrorState onRetry={refetch} />
+      ) : (
+        <DataTable
+          columns={columns}
+          rows={tickets ?? []}
+          keyField={(t) => t.id}
+          emptyTitle="No support tickets"
+          emptyDescription="Open a ticket and our team will respond within one business day."
+        />
+      )}
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="New support ticket">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <Input
+            label="Subject"
+            value={form.subject}
+            onChange={(event) => setForm({ ...form, subject: event.target.value })}
+            placeholder="What do you need help with?"
+          />
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="support-message" className="text-sm font-medium text-[var(--color-text-primary)]">
+              Message
+            </label>
+            <textarea
+              id="support-message"
+              rows={5}
+              value={form.message}
+              onChange={(event) => setForm({ ...form, message: event.target.value })}
+              placeholder="Tell us how we can help."
+              className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-background-elevated)] px-3.5 py-2.5 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+            />
+          </div>
+          {formError && <p className="text-sm text-[var(--color-danger)]">{formError}</p>}
+          <Button type="submit" isLoading={isSubmitting} className="mt-2">
+            Submit ticket
+          </Button>
+        </form>
+      </Modal>
     </div>
   )
 }
