@@ -68,5 +68,9 @@ export const taxonomyService = {
   async categories() { return (await apiClient.get<ApiResponse<Category[]>>('/categories')).data.data },
   async tags() { return (await apiClient.get<ApiResponse<Tag[]>>('/categories/tags')).data.data },
   async createCategory(payload: { name: string; slug?: string }) { return (await apiClient.post<ApiResponse<Category>>('/categories', payload)).data.data },
+  async updateCategory(id: string, payload: { name?: string; slug?: string }) { return (await apiClient.patch<ApiResponse<Category>>(`/categories/${id}`, payload)).data.data },
+  async deleteCategory(id: string) { await apiClient.delete(`/categories/${id}`) },
   async createTag(payload: { name: string; slug?: string }) { return (await apiClient.post<ApiResponse<Tag>>('/categories/tags', payload)).data.data },
+  async updateTag(id: string, payload: { name?: string; slug?: string }) { return (await apiClient.patch<ApiResponse<Tag>>(`/categories/tags/${id}`, payload)).data.data },
+  async deleteTag(id: string) { await apiClient.delete(`/categories/tags/${id}`) },
 }
