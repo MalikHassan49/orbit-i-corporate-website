@@ -49,6 +49,8 @@ export const ROUTES = {
   adminSupport: '/admin/support',
   adminCaseStudies: '/admin/case-studies',
   adminBlog: '/admin/blog',
+  adminCategories: '/admin/categories',
+  adminTags: '/admin/tags',
   adminTestimonials: '/admin/testimonials',
   adminTeam: '/admin/team',
   adminSettings: '/admin/settings',

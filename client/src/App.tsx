@@ -46,6 +46,8 @@ import {
   AdminApplicationsPage,
   AdminLeadsPage,
   AdminCaseStudiesPage,
+  AdminCategoriesPage,
+  AdminTagsPage,
   AdminTestimonialsPage,
   AdminTeamPage,
   AdminSettingsPage,
@@ -137,6 +139,8 @@ function App() {
             >
               <Route path={ROUTES.adminCaseStudies} element={<AdminCaseStudiesPage />} />
               <Route path={ROUTES.adminBlog} element={<AdminBlogPage />} />
+              <Route path={ROUTES.adminCategories} element={<AdminCategoriesPage />} />
+              <Route path={ROUTES.adminTags} element={<AdminTagsPage />} />
             </Route>
           </Routes>
         </AuthProvider>

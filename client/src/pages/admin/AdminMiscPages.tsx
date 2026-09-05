@@ -11,13 +11,13 @@ import { formatDate } from '@/utils/formatters'
 import { slugify } from '@/utils/formatters'
 import { careersService, type JobApplicationRecord } from '@/services/careersService'
 import { contactService, type ContactMessageRecord } from '@/services/contactService'
-import { caseStudyService, testimonialService } from '@/services/contentService'
+import { caseStudyService, testimonialService, taxonomyService } from '@/services/contentService'
 import { teamService } from '@/services/teamService'
 import { adminService } from '@/services/adminService'
 import { useFetch } from '@/hooks/useFetch'
 import { getApiErrorMessage } from '@/utils/apiError'
 import { CONTACT_EMAIL } from '@/config/socialLinks'
-import type { Job, CaseStudy, Testimonial, TeamMember } from '@/types'
+import type { Job, CaseStudy, Category, Tag, Testimonial, TeamMember } from '@/types'
 import { RichTextEditor } from '@/components/editor/RichTextEditor'
 
 // ---------------------------------------------------------------------------
@@ -564,6 +564,222 @@ export function AdminTeamPage() {
           {formError && <p className="text-sm text-[var(--color-danger)]">{formError}</p>}
           <Button onClick={handleSubmit} isLoading={isSubmitting} className="mt-2">
             {editingMember ? 'Save changes' : 'Add team member'}
+          </Button>
+        </div>
+      </Modal>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Taxonomy: Categories
+// ---------------------------------------------------------------------------
+export function AdminCategoriesPage() {
+  const { data: categories, isLoading, error, refetch } = useFetch(() => taxonomyService.categories(), [])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+  const [name, setName] = useState('')
+  const [formError, setFormError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const reset = () => {
+    setName('')
+    setEditingCategory(null)
+    setFormError(null)
+    setIsModalOpen(false)
+  }
+
+  const openCreate = () => {
+    setEditingCategory(null)
+    setName('')
+    setFormError(null)
+    setIsModalOpen(true)
+  }
+
+  const openEdit = (category: Category) => {
+    setEditingCategory(category)
+    setName(category.name)
+    setFormError(null)
+    setIsModalOpen(true)
+  }
+
+  const handleSubmit = async () => {
+    const trimmedName = name.trim()
+    if (!trimmedName) {
+      setFormError('Category name is required.')
+      return
+    }
+
+    setFormError(null)
+    setIsSubmitting(true)
+    try {
+      if (editingCategory) {
+        await taxonomyService.updateCategory(editingCategory.id, { name: trimmedName })
+      } else {
+        await taxonomyService.createCategory({ name: trimmedName })
+      }
+      reset()
+      refetch()
+    } catch (err) {
+      setFormError(getApiErrorMessage(err, editingCategory ? 'Could not update the category.' : 'Could not create the category.'))
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleDelete = async (category: Category) => {
+    if (!window.confirm(`Delete "${category.name}" category?`)) return
+    try {
+      await taxonomyService.deleteCategory(category.id)
+      refetch()
+    } catch (err) {
+      setFormError(getApiErrorMessage(err, 'Could not delete the category.'))
+    }
+  }
+
+  const columns: DataTableColumn<Category>[] = [
+    { header: 'Name', render: (c) => <span className="font-medium">{c.name}</span> },
+    { header: 'Slug', render: (c) => c.slug },
+    {
+      header: '',
+      render: (c) => (
+        <div className="flex gap-2">
+          <Button size="sm" variant="ghost" onClick={() => openEdit(c)}>Edit</Button>
+          <Button size="sm" variant="ghost" onClick={() => handleDelete(c)}>Delete</Button>
+        </div>
+      ),
+    },
+  ]
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="font-display text-xl font-semibold text-[var(--color-text-primary)]">Categories</h2>
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Organize blog and case study content.</p>
+        </div>
+        <Button size="md" onClick={openCreate}>
+          <Plus className="size-4" aria-hidden /> New category
+        </Button>
+      </div>
+      {isLoading ? <PageLoader /> : error ? <ErrorState onRetry={refetch} /> : (
+        <DataTable columns={columns} rows={categories ?? []} keyField={(c) => c.id} emptyTitle="No categories found" />
+      )}
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingCategory ? 'Edit category' : 'New category'}>
+        <div className="flex flex-col gap-4">
+          <Input label="Category name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Growth marketing" />
+          {formError && <p className="text-sm text-[var(--color-danger)]">{formError}</p>}
+          <Button onClick={handleSubmit} isLoading={isSubmitting}>
+            {editingCategory ? 'Save changes' : 'Create category'}
+          </Button>
+        </div>
+      </Modal>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Taxonomy: Tags
+// ---------------------------------------------------------------------------
+export function AdminTagsPage() {
+  const { data: tags, isLoading, error, refetch } = useFetch(() => taxonomyService.tags(), [])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingTag, setEditingTag] = useState<Tag | null>(null)
+  const [name, setName] = useState('')
+  const [formError, setFormError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const reset = () => {
+    setName('')
+    setEditingTag(null)
+    setFormError(null)
+    setIsModalOpen(false)
+  }
+
+  const openCreate = () => {
+    setEditingTag(null)
+    setName('')
+    setFormError(null)
+    setIsModalOpen(true)
+  }
+
+  const openEdit = (tag: Tag) => {
+    setEditingTag(tag)
+    setName(tag.name)
+    setFormError(null)
+    setIsModalOpen(true)
+  }
+
+  const handleSubmit = async () => {
+    const trimmedName = name.trim()
+    if (!trimmedName) {
+      setFormError('Tag name is required.')
+      return
+    }
+
+    setFormError(null)
+    setIsSubmitting(true)
+    try {
+      if (editingTag) {
+        await taxonomyService.updateTag(editingTag.id, { name: trimmedName })
+      } else {
+        await taxonomyService.createTag({ name: trimmedName })
+      }
+      reset()
+      refetch()
+    } catch (err) {
+      setFormError(getApiErrorMessage(err, editingTag ? 'Could not update the tag.' : 'Could not create the tag.'))
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleDelete = async (tag: Tag) => {
+    if (!window.confirm(`Delete "${tag.name}" tag?`)) return
+    try {
+      await taxonomyService.deleteTag(tag.id)
+      refetch()
+    } catch (err) {
+      setFormError(getApiErrorMessage(err, 'Could not delete the tag.'))
+    }
+  }
+
+  const columns: DataTableColumn<Tag>[] = [
+    { header: 'Name', render: (t) => <span className="font-medium">{t.name}</span> },
+    { header: 'Slug', render: (t) => t.slug },
+    {
+      header: '',
+      render: (t) => (
+        <div className="flex gap-2">
+          <Button size="sm" variant="ghost" onClick={() => openEdit(t)}>Edit</Button>
+          <Button size="sm" variant="ghost" onClick={() => handleDelete(t)}>Delete</Button>
+        </div>
+      ),
+    },
+  ]
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="font-display text-xl font-semibold text-[var(--color-text-primary)]">Tags</h2>
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Add reusable labels for content discovery.</p>
+        </div>
+        <Button size="md" onClick={openCreate}>
+          <Plus className="size-4" aria-hidden /> New tag
+        </Button>
+      </div>
+      {isLoading ? <PageLoader /> : error ? <ErrorState onRetry={refetch} /> : (
+        <DataTable columns={columns} rows={tags ?? []} keyField={(t) => t.id} emptyTitle="No tags found" />
+      )}
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingTag ? 'Edit tag' : 'New tag'}>
+        <div className="flex flex-col gap-4">
+          <Input label="Tag name" value={name} onChange={(e) => setName(e.target.value)} placeholder="SEO" />
+          {formError && <p className="text-sm text-[var(--color-danger)]">{formError}</p>}
+          <Button onClick={handleSubmit} isLoading={isSubmitting}>
+            {editingTag ? 'Save changes' : 'Create tag'}
           </Button>
         </div>
       </Modal>

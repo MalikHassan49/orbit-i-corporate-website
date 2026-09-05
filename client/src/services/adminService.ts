@@ -21,6 +21,11 @@ export const adminService = {
     return data.data
   },
 
+  async createEditor(payload: { fullName: string; email: string; password: string }) {
+    const { data } = await apiClient.post<ApiResponse<User>>('/users/editors', payload)
+    return data.data
+  },
+
   async setClientActive(id: string, isActive: boolean) {
     const { data } = await apiClient.patch<ApiResponse<User>>(`/users/${id}/status`, { isActive })
     return data.data
