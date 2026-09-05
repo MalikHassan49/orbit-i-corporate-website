@@ -36,6 +36,7 @@ import { AdminClientsPage } from '@/pages/admin/AdminClientsPage'
 import { AdminProductsPage } from '@/pages/admin/AdminProductsPage'
 import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage'
 import { AdminProjectsPage } from '@/pages/admin/AdminProjectsPage'
+import { AdminSupportPage } from '@/pages/admin/AdminSupportPage'
 import {
   AdminCareersPage,
   AdminApplicationsPage,
@@ -112,6 +113,7 @@ function App() {
               <Route path={ROUTES.adminCareers} element={<AdminCareersPage />} />
               <Route path={ROUTES.adminApplications} element={<AdminApplicationsPage />} />
               <Route path={ROUTES.adminLeads} element={<AdminLeadsPage />} />
+              <Route path={ROUTES.adminSupport} element={<AdminSupportPage />} />
               <Route path={ROUTES.adminCaseStudies} element={<AdminCaseStudiesPage />} />
               <Route path={ROUTES.adminTestimonials} element={<AdminTestimonialsPage />} />
               <Route path={ROUTES.adminTeam} element={<AdminTeamPage />} />

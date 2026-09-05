@@ -42,6 +42,7 @@ export const ROUTES = {
   adminCareers: '/admin/careers',
   adminApplications: '/admin/applications',
   adminLeads: '/admin/leads',
+  adminSupport: '/admin/support',
   adminCaseStudies: '/admin/case-studies',
   adminTestimonials: '/admin/testimonials',
   adminTeam: '/admin/team',
