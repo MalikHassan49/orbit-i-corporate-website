@@ -41,6 +41,7 @@ import { AdminClientsPage } from '@/pages/admin/AdminClientsPage'
 import { AdminProductsPage } from '@/pages/admin/AdminProductsPage'
 import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage'
 import { AdminProjectsPage } from '@/pages/admin/AdminProjectsPage'
+import { AdminSupportPage } from '@/pages/admin/AdminSupportPage'
 import {
   AdminCareersPage,
   AdminApplicationsPage,
