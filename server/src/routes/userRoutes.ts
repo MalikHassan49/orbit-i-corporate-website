@@ -13,6 +13,8 @@ router.patch('/me', authenticate, validateBody(updateProfileSchema), userControl
 router.get('/', authenticate, authorize(...ADMIN_ROLES), userController.listClients)
 router.patch('/:id/status', authenticate, authorize(...ADMIN_ROLES), userController.setActiveStatus)
 router.post('/editors', authenticate, authorize(ROLES.SUPER_ADMIN), validateBody(createEditorSchema), userController.createEditor)
-router.post('/seo-managers', authenticate, authorize(ROLES.SUPER_ADMIN), validateBody(createSeoManagerSchema), userController.createSeoManager)
+router.post('/seo-managers', authenticate, authorize(...ADMIN_ROLES), validateBody(createSeoManagerSchema), userController.createSeoManager)
+router.get('/seo-managers', authenticate, authorize(...ADMIN_ROLES), userController.listSeoManagers)
+router.delete('/seo-managers/:id', authenticate, authorize(...ADMIN_ROLES), userController.deleteSeoManager)
 
 export default router
