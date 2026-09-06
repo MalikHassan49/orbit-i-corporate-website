@@ -24,6 +24,7 @@ export function AdminClientsPage() {
     () => adminService.listClients({ search: query || undefined }),
     [query]
   )
+  const { data: seoManagers, refetch: refetchSeoManagers } = useFetch(() => adminService.listSeoManagers(), [])
   const clients = result?.items ?? []
 
   const toggleActive = async (client: User) => {
@@ -53,10 +54,22 @@ export function AdminClientsPage() {
       await adminService.createSeoManager({ fullName, email, password })
       setIsInviteOpen(false)
       setAccountForm({ fullName: '', email: '', password: '' })
+      refetchSeoManagers()
     } catch (err) {
       setAccountError(getApiErrorMessage(err, 'Could not create the SEO manager account.'))
     } finally {
       setIsCreatingAccount(false)
+    }
+
+  }
+
+  const handleDeleteSeoManager = async (manager: User) => {
+    if (!window.confirm(`Delete the SEO manager account for ${manager.email}?`)) return
+    try {
+      await adminService.deleteSeoManager(manager.id)
+      refetchSeoManagers()
+    } catch (err) {
+      setAccountError(getApiErrorMessage(err, 'Could not delete the SEO manager account.'))
     }
   }
 
@@ -85,7 +98,7 @@ export function AdminClientsPage() {
           </p>
         </div>
         <div className="flex w-full flex-col gap-3 sm:max-w-xl sm:flex-row sm:items-center sm:justify-end">
-          {user?.role === 'super_admin' && (
+          {(user?.role === 'admin' || user?.role === 'super_admin') && (
             <Button size="md" variant="outline" onClick={openCreateDialog}>
               Create SEO manager
             </Button>
@@ -102,6 +115,33 @@ export function AdminClientsPage() {
         <ErrorState onRetry={refetch} />
       ) : (
         <DataTable columns={columns} rows={clients} keyField={(c) => c.id} emptyTitle="No clients found" />
+      )}
+
+      {(user?.role === 'admin' || user?.role === 'super_admin') && (
+        <section className="flex flex-col gap-3">
+          <div>
+            <h3 className="font-display text-lg font-semibold text-[var(--color-text-primary)]">SEO managers</h3>
+            <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Manage accounts that can edit SEO and content.</p>
+          </div>
+          <DataTable
+            columns={[
+              { header: 'Name', render: (manager) => <span className="font-medium">{manager.fullName}</span> },
+              { header: 'Email', render: (manager) => manager.email },
+              { header: 'Joined', render: (manager) => formatDate(manager.createdAt) },
+              {
+                header: '',
+                render: (manager) => (
+                  <Button size="sm" variant="danger" onClick={() => void handleDeleteSeoManager(manager)}>
+                    Delete
+                  </Button>
+                ),
+              },
+            ]}
+            rows={seoManagers ?? []}
+            keyField={(manager) => manager.id}
+            emptyTitle="No SEO managers found"
+          />
+        </section>
       )}
 
       <Modal isOpen={isInviteOpen} onClose={() => setIsInviteOpen(false)} title="Create SEO manager account">

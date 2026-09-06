@@ -30,6 +30,13 @@ export const adminService = {
     const { data } = await apiClient.post<ApiResponse<User>>('/users/seo-managers', payload)
     return data.data
   },
+  async listSeoManagers() {
+    const { data } = await apiClient.get<ApiResponse<User[]>>('/users/seo-managers')
+    return data.data
+  },
+  async deleteSeoManager(id: string) {
+    await apiClient.delete<ApiResponse<null>>(`/users/seo-managers/${id}`)
+  },
 
   async setClientActive(id: string, isActive: boolean) {
     const { data } = await apiClient.patch<ApiResponse<User>>(`/users/${id}/status`, { isActive })

@@ -44,6 +44,13 @@ export const userService = {
     if (!user) throw ApiError.notFound('User not found')
     return user
   },
+  async listSeoManagers() {
+    return User.find({ role: ROLES.SEO_MANAGER }).sort({ createdAt: -1 })
+  },
+  async deleteSeoManager(id: string) {
+    const user = await User.findOneAndDelete({ _id: id, role: ROLES.SEO_MANAGER })
+    if (!user) throw ApiError.notFound('SEO manager not found')
+  },
   async createEditor(input: { fullName: string; email: string; password: string }) {
     if (await User.findOne({ email: input.email })) throw ApiError.conflict('An account with this email already exists')
     return User.create({

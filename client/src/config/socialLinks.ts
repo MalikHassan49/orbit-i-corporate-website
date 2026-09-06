@@ -8,7 +8,7 @@ export interface SocialLink {
   icon: ElementType
 }
 
-export const CONTACT_EMAIL = 'isamadrind.work@gmail.com'
+export const CONTACT_EMAIL = 'orbiti2026@gmail.com'
 export const LINKEDIN_URL = 'https://www.linkedin.com/company/orbit-i-private-limited/'
 export const WHATSAPP_CHANNEL_URL = 'https://whatsapp.com/channel/0029Vb8l4kvJJzUXqEnB50J'
 export const FACEBOOK_URL = 'https://www.facebook.com/profile.php?id=61590347497312&mibextid=ZbWKwL'
