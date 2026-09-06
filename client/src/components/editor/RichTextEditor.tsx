@@ -98,7 +98,8 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     onUpdate: ({ editor: current }) => onChange(current.getHTML()),
     editorProps: {
       attributes: {
-        class: 'h-96 w-full min-w-0 max-w-full overflow-x-hidden overflow-y-auto break-words rounded-b border border-t-0 p-3 outline-none text-sm text-[var(--color-text-primary)] prose prose-invert max-w-none [overflow-wrap:anywhere] [&_img]:max-w-full [&_img]:h-auto [&_table]:w-full [&_table]:max-w-full [&_table]:table-fixed [&_td]:break-words [&_th]:break-words',
+        class: 'h-96 w-full min-w-0 max-w-full overflow-x-hidden overflow-y-auto rounded-b border border-t-0 p-3 outline-none text-sm text-[var(--color-text-primary)] prose prose-invert max-w-none [&_img]:max-w-full [&_img]:h-auto [&_table]:w-full [&_table]:max-w-full [&_table]:table-fixed [&_td]:break-words [&_th]:break-words',
+        style: 'overflow-wrap:anywhere; word-break:break-word; white-space:pre-wrap; overflow-x:hidden; max-width:100%; width:100%;',
       },
     },
   })
@@ -120,7 +121,7 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
 
   return (
     <div className="w-full min-w-0 max-w-full overflow-hidden rounded">
-      <div className="flex max-w-full flex-wrap items-center gap-1 border border-[var(--color-border)] bg-[var(--color-background-elevated)] p-1">
+      <div className="flex w-full min-w-0 max-w-full flex-wrap items-center gap-1 border border-[var(--color-border)] bg-[var(--color-background-elevated)] p-1">
         {headingButtons.map(([level, Icon]) => (
           <ToolbarButton
             key={level}
